@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="../frame/layui/css/layui.css">
+    <link rel="stylesheet" href="../frame/static/css/style.css">
+
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/productList.css">
+
+    <link rel="icon" href="../frame/static/image/code.png">
+
+</head>
+<body class="body">
+<!--<table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>-->
+<div class="container">
+    <div class="main_top layui-col-md12">
+        <form class="layui-form" action="" name="orderSerachForm" id="orderSerachForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单编号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="id" name="orderId" lay-verify="required|phone" autocomplete="off"
+                               placeholder="订单编号"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">产品名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" placeholder="产品名" lay-verify="email" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">下单时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="date" placeholder=" - " name="createTime"
+                               lay-verify="required|phone"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户编号：</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="email" placeholder="用户ID" lay-verify="required|phone"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" pane="">
+                <label class="layui-form-label">订单状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="isPayfor" value="" title="全部" checked>
+                    <input type="radio" name="isPayfor" value="0" title="未付款">
+                    <input type="radio" name="isPayfor" value="1" title="待发货">
+                    <!--<input type="radio" name="isPayfor" value="2" title="配送中">-->
+                    <input type="radio" name="isPayfor" value="2" title="待收货">
+                    <input type="radio" name="isPayfor" value="待评价" title="待评价" disabled="">
+                    <button style="width: 55px;border-radius: 25px" type="button"
+                            class="layui-btn layui-btn-sm layui-btn-radius">
+                        <span style="font-size: 12px;;position: relative;right:10px"><i style="font-size: 12px"
+                                                                                        class="layui-icon">&#xe615;</i><span>搜索</span></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="main_content layui-col-md12">
+        <div class="layui-btn-group demoTable">
+            <button disabled="disabled" style="cursor: not-allowed" class="layui-btn layui-btn-sm _btn"
+                    data-type="getCheckData">
+                <span class="layui-icon">&#xe654;添加</span>
+            </button>
+            <button class="layui-btn layui-btn-sm _btn" data-type="getCheckLength"><span
+                    class="layui-icon">&#xe640;删除</span>
+            </button>
+        </div>
+        <!--刷新按钮-->
+        <div style="float: right;margin-right: 20px">
+            <button id="reloadTab" type="button" style="height: 30px;width: 30px;border-radius: 5px"
+                    class="layui-btn layui-btn-sm layui-btn-primary">
+                <i style="position: relative;bottom: 3px;right: 8px" class="layui-icon">&#x1002;</i>
+            </button>
+        </div>
+
+
+        <table class="layui-hide" id="LAY_table_user" lay-skin="nob" lay-filter="user"></table>
+        <script type="text/html" id="barDemo">
+            <a class="a_operater" lay-event="edit"><i class="layui-icon layui-icon-edit">&#xe642;</i>查看</a>
+            <a class="a_operater" lay-event="handle"><i class="layui-icon layui-icon-edit">&#xe631;</i>发货</a>
+            <a class="a_operater" lay-event="del"><i class="layui-icon layui-icon-close">&#xe640;</i>删除</a>
+            <a class="a_operater" lay-event="return"><i class="layui-icon layui-icon-tips">&#xe702;</i>退货处理</a>
+        </script>
+        <script type="text/html" id="createTime">
+            {{ dateFormat(d.createTime) }}
+        </script>
+
+        <script type="text/html" id="payfor">
+            {{# if (d.isPayfor == 0) { }}
+            <span style="background: #e95f6e; padding: 3px 5px; border-radius: 10px; font-size: 8px; color: #ffffff;">未支付</span>
+            {{# }else if(d.isPayfor == 1){ }}
+            <span style="background: #298bc9; padding: 3px 5px; border-radius: 10px; font-size: 8px;color: #ffffff;">待发货</span>
+            {{# }else if(d.isPayfor == 2){ }}
+            <span style="background: rgba(13,185,51,0.72); padding: 3px 5px; border-radius: 10px;font-size: 8px; color: #ffffff;"> 待收货 </span>
+            {{# }else if(d.isPayfor == 4){ }}
+            <span style="background: orange; padding: 3px 5px; border-radius: 10px; font-size: 8px;color: #ffffff;"> 退货中 </span>
+            {{# }else if(d.isPayfor == 5){ }}
+            <span style="background: green; padding: 3px 5px; border-radius: 10px; font-size: 8px;color: #ffffff;">同意退货 </span>
+            {{# }else if(d.isPayfor == 6){ }}
+            <span style="background: red; padding: 3px 5px; border-radius: 10px; font-size: 8px;color: #ffffff;"> 拒绝退货 </span>
+            {{# } }}
+        </script>
+
+        <script type="text/html" id="totalPrice">
+            <span style="color:#e95f6e">¥{{d.totalPrice}}</span>
+        </script>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="../frame/layui/layui.js"></script>
+
+<style>
+    .layui-container {
+        padding-top: 20px;
+    }
+
+    .layui-container .layui-row {
+        margin-bottom: 20px;
+    }
+
+    .layui-card {
+        box-shadow: 5px 5px 5px #888888;
+        -moz-box-shadow: 5px 5px 5px #888888;
+        -webkit-box-shadow: 5px 5px 5px #888888;
+        color: gray;
+    }
+
+    .layui-card .layui-card-body {
+        background-color: white;
+        padding: 10px 10px;
+    }
+
+    .layui-card .layui-card-header {
+        padding: 15px;
+        background-color: white;
+        border-bottom: 1px solid #ebebeb;
+    }
+
+    .layui-card .layui-card-body .td_ {
+        text-align: left;
+        color: darkcyan;
+    }
+</style>
+
+<script type="text/javascript">
+    layui.use('laydate', function () {
+        var laydate = layui.laydate,
+            form = layui.form;
+        //常规用法
+        laydate.render({
+            elem: '#date'
+            , type: 'datetime'
+            , range: true
+        });
+    })
+
+    /* 时间戳转化开始 */
+    function dateFormat(value) {
+
+        var date = new Date(value);//如果date为13位不需要乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return Y + M + D + h + m + s;
+
+    }
+
+    /*转换结束*/
+</script>
+<script type="text/javascript" src="/js/orderList.js"></script>
+
+
+<div class="layui-container" id="orders" style="display: none">
+    <div class="layui-row">
+        <div class="layui-card layui-col-md5">
+            <div class="layui-card-header">订单信息</div>
+            <div class="layui-card-body">
+                <table class="layui-table" lay-skin="nob">
+                    <tr>
+                        <td>订单编号</td>
+                        <td class="td_" id="orderId">124312412412414</td>
+                    </tr>
+                    <tr>
+                        <td>订单状态</td>
+                        <td class="td_" id="isPayfor">配送中</td>
+                    </tr>
+                    <tr>
+                        <td>下单时间</td>
+                        <td class="td_" id="creatTime">2018-7-23 20:13:00</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="layui-col-md1" style="width: 190px;height: 10px"></div>
+        <div class="layui-card layui-col-md5">
+            <div class="layui-card-header">收货认信息</div>
+            <div class="layui-card-body">
+                <table class="layui-table" lay-skin="nob">
+                    <tr>
+                        <td>收货人</td>
+                        <td class="td_" id="recUser">永健</td>
+                    </tr>
+                    <tr>
+                        <td>手机/电话</td>
+                        <td class="td_" id="recTel">18078542914</td>
+                    </tr>
+                    <tr>
+                        <td>收货地址</td>
+                        <td class="td_" id="recAddress">广西玉林沙田镇</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--订单信息详情-->
+    <div class="layui-row">
+        <div class="layui-card layui-col-md12">
+            <div class="layui-card-header">产品信息
+                <span id="m" style="float: right;margin-right: 50px;color: #e95f6e">
+                    总金额：¥
+                  <i id="Price" style="font-size:20px;"></i>
+                </span>
+            </div>
+            <div class="layui-card-body" id="productMsgTab">
+                <!--<table class="layui-table" lay-skin="">
+                    <colgroup>
+                        <col width="330">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li style="float: left">
+                                    <a title="点击查看商品详情"
+                                       <img id="img"/>
+                                    </a>
+                                </li>
+                                <li style="width: 300px">
+                                    <a id="name" title="点击查看商品详情"></a>
+                                </li>
+                            </ul>
+                        </td>
+                        <td>
+                            <p>规格：默认</p>
+                            <p>尺寸：<span id="size"></span></p>
+                            <p>颜色：<span id="color"></span></p>
+                        </td>
+                        <td style="color: red">¥&nbsp;<span></span>
+                        </td>
+                        <td><span> </span>&nbsp;双</td>
+                        <td style="color: red">¥&nbsp;<span></span>
+                        </td>
+                        <td>
+                            <p><span></span></p>
+                            <span style="color: red"></span>
+                            <span style="color: red"
+                            ></span>
+                            <br>
+                            <a style="color: gray"></a>
+                        </td>
+                    </tr>
+                </table>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--订单处理 已下单-->
+<div id="orderHadle" class="layui-container" style="width: 850px;display: none">
+    <form class="layui-form" action="" id="LogisticsForm" name="LogisticsForm">
+        <div class="layui-row">
+            <div class="layui-col-md5">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">发货人</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="fa_ren" name="onsignor" required lay-verify="required"
+                               placeholder="请输入标题"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="fa_tel" name="onsignor_tel" required lay-verify="required"
+                               placeholder="请输入标题"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">发货地址</label>
+                    <div class="layui-input-block">
+                        <textarea id="fa_address" name="shipAddress" placeholder="请输入内容"
+                                  class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="layui-col-md5">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">收货人</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="consignee" id="a_recUser" required lay-verify="required" placeholder=""
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="consignee_tel" id="a_recTel" required lay-verify="required"
+                               placeholder=""
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">发货地址</label>
+                    <div class="layui-input-block">
+                        <textarea name="recAddress" id="a_recAddress" placeholder="请输入内容"
+                                  class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input id="LogisticsSubmitBtn" type="button" class="layui-btn" lay-submit lay-filter="formDemo"
+                               value="立即提交">
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--退货-->
+<div class="layui-container" id="returnProductDetail" style="display: none;width: 800px;padding-top: 20px">
+    <form class="layui-form" action="" id="returnForm" name="returnForm" enctype="multipart/form-data">
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div id="detail">
+                    <div><span>时间：</span>
+                        <div style="padding: 10px"></div>
+                    </div>
+                    <div><span>理由：</span>
+                        <div class="Detailreason"
+                             style="border: 1px solid #ebebeb;width: 700px;margin: 10px;padding: 10px"></div>
+                    </div>
+                    <div><span>说明：</span>
+                        <div class="DetailRemark"
+                             style="border: 1px solid #ebebeb;width: 700px;margin: 10px;padding: 10px"></div>
+                    </div>
+                    <div><span>凭证：</span>
+                        <div class="Detailimg"
+                             style="border: 1px solid #ebebeb;width: 700px;height: 150px;margin: 10px;padding: 10px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="chuliDiv" style="padding: 20px;display: none">
+
+    <form id="updateReturnForm" class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否同意</label>
+            <div class="layui-input-block">
+                <input type="radio" name="return_status" value="1" title="同意" checked>
+                <input type="radio" name="return_status" value="2" title="拒绝" >
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">理由</label>
+            <div class="layui-input-block">
+                <textarea name="returnContent" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" id="chuliSubmitBtn" class="layui-btn" lay-filter="formDemo" value="立即提交">
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+body{
+    background-color: #f3f3f4;
+}
+/*layui滚动条样式*/
+::-webkit-scrollbar {
+    width: 10px;
+    height: 5px;
+}
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:vertical {
+    display: none;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track:vertical {
+    background-color: black;
+}
+::-webkit-scrollbar-track-piece {
+    background-color: #f5f5f5;
+}
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:vertical {
+    margin-right: 10px;
+    background-color: #a6a6a6;
+}
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:vertical:hover {
+    background-color: #aaa;
+}
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-corner:vertical {
+    background-color: #535353;
+}
+::-webkit-scrollbar-resizer,
+::-webkit-scrollbar-resizer:vertical {
+    background-color: #ff6e00;
+}
+
+
+
+body .layuiAlert {
+    background-color: #FAFAFA;
+}
+table td{
+    font-size: small !important;
+    color: gray;
+}
+.main_top{
+    background-color: white;
+    border: 0.5px solid #ebebeb;
+    margin-bottom: 10px;
+    padding:10px 15px;
+    padding-bottom: 0px;
+    border-radius: 7px;
+    box-shadow:1px 1px 1px 1px #efefef;
+    -moz-box-shadow:1px 1px 1px 1px #efefef;
+    -webkit-box-shadow:1px 1px 1px 1px #efefef
+}
+
+
+.main_top .layui-input{
+    height: 30px;
+    border-radius: 3px;
+    width: 300px;
+}
+.main_top .layui-form-item{
+    padding-bottom: -30px !important;
+    margin-bottom: 5px !important;
+    font-size: small;
+
+}
+.main_top .layui-form-item:nth-child(2){
+    position: relative;
+    top:-10px;
+}
+.main_top .layui-inline{
+    width: 32%;
+}
+
+.main_top .layui-input-inline{
+    position: relative;
+    left: -15px;
+}
+.main_top button{
+    height: 30px;
+    border-radius: 5px;
+    margin-top: -10px;
+}
+.main_top button span,.main_top button i{
+    position: relative;
+    bottom: 2px;
+}
+
+
+.main_content{
+    border-radius: 7px;
+    padding:10px 15px;
+    box-shadow:5px 5px 5px #888888;
+    -moz-box-shadow:1px 1px 1px 1px #efefef;
+    -webkit-box-shadow:1px 1px 1px 1px #efefef;
+    background-color: white !important;
+}
+
+.layui-table,.layui-form{
+    background-color: white;
+    border: none;
+}
+.layui-form .layui-table-fixed tr{
+    background-color: white;
+}
+
+.main_content .layui-table-header{
+    border: none;
+    border-bottom: 1px solid #ebebeb;
+}
+.main_content .layui-table-header th{
+    font-weight: bolder;
+}
+.main_content .layui-table-tool{
+    background-color: white ;
+    margin-top: 20px;
+    border:none;
+}
+.layui-table-body{
+    border: none;
+}
+
+.main_content ._btn:nth-child(1){
+    border-right: none !important;
+}
+.main_content ._btn{
+    height: 35px;
+    width: 70px;
+    padding-left: 10px;
+    padding-top: -15px !important;
+}
+.main_content ._btn span{
+    font-size: 16px
+}
+.main_content .layui-form .layui-table-header{
+    background-color: white;
+}
+.main_content .a_operater:nth-child(1){
+    background-color: #1c84c6;
+}
+.main_content .a_operater:nth-child(2){
+    background-color: #ed5565;
+}
+.main_content .a_operater:nth-child(4){
+    background-color: coral;
+}
+.main_content .a_operater{
+    color: white;
+    font-size: 10px;
+    padding: 4px 2px;
+    padding-right: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.main_content .a_operater i{
+    font-size: 12px;
+}
+.main_content .layui-table-body table{
+    border: none !important;
+}
+.main_content .a_operater:nth-child(1):hover{
+    background-color: #298bc9;
+    color: white;
+}
+.main_content .a_operater:nth-child(2):hover{
+    background-color: red;
+    color: white;
+}
+.main_content .a_operater:nth-child(3){
+    background-color: #23c6c8;
+    color: white;
+}
+.main_content .layui-table,.layui-table thead tr{
+    background-color: white !important;
+    border-bottom: 1px solid #ebebeb;
+}
+
+.main_content .demoTable button:nth-child(1){
+    border-radius: 25px 0px 0px 25px !important;
+    border: 1px solid #298bc9;
+    background-color: white;
+    color: #298bc9;
+}
+.main_content .demoTable button:nth-child(1):hover{
+    background-color: #298bc9;
+    color: white;
+}
+.main_content .demoTable button:nth-child(2):hover{
+    background-color: #e95f6e;
+    color: white;
+}
+.main_content .demoTable button:nth-child(2){
+    border-radius: 0px 25px 25px 0px;
+    border: 1px solid red;
+    color: red;
+    background-color: white;
+}
+
+/*数据表格表头样式*/
+th span{
+    font-size: 13px!important;
+}
+
+/*刷新按钮鼠标悬停*/
+#reloadTab:hover{
+    background-color: gray;
+    border: 1px solid #ebebeb;
+    color: white;
+}
+
+
+.iStr{
+    margin-left: 10px;margin-top:5px;font-size: 12px;color: darkorange;
+}

@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="../frame/layui/css/layui.css">
+    <link rel="stylesheet" href="../frame/static/css/style.css">
+
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/productList.css">
+
+    <link rel="icon" href="../frame/static/image/code.png">
+    <style>
+
+        /*预览图片*/
+        ul li {
+            float: left;
+            padding-right: 10px;
+        }
+
+        .uploadImg input {
+            display: none;
+        }
+
+        .uploadImg {
+            padding-top: 20px;
+        }
+
+        .uploadImg {
+            display: inline-block;
+        }
+
+        /*恢复按钮*/
+        #cover {
+            border-radius: 0px 25px 25px 0px;
+            border: 1px solid #33aba0;
+            width: 75px;
+            height: 35px;
+            background: white;
+            color: #33aba0
+        }
+
+        #cover:hover {
+            background-color: #33aba0;
+            color: white;
+        }
+
+        .div_color {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-top: 10px;
+            position: relative;
+            right: -8px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .ul_color li {
+            float: left;
+            width: 350px;
+        }
+
+        .checkboxDiv .div_ {
+            float: left;
+        }
+
+        #mimgMainDiv {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            border: 2px dashed #ebebeb;
+            cursor: pointer;
+
+        }
+
+        #mimgMainDiv img {
+            width: 200px;
+            height: 200px;
+        }
+
+        #mimgMainDiv p {
+            font-size: 10ch;
+            color: #1E9FFF;
+            position: relative;
+            top: 28%;
+            left: 28%;
+        }
+
+        .minImg {
+            width: 100px;
+            height: 100px;
+            border: 1px dashed #ebebeb;
+            border-radius: 5px;
+        }
+
+        .minImg img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+
+        }
+
+        .midImg {
+            width: 150px;
+            height: 150px;
+            border: 1px dashed #ebebeb;
+            border-radius: 5px;
+
+        }
+
+        .midImg img {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .maxImg {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #ebebeb;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .maxImg img {
+            width: 200px;
+            height: 200px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .maxImg p {
+            font-size: 80px;
+            color: #1E9FFF;
+            position: relative;
+            top: 35%;
+            left: 30%;
+
+        }
+
+        .maxImgA {
+            background-color: gray;
+            opacity: 0.5;
+            width: 200px;
+            height: 200px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1003 !important;
+            position: relative;
+            margin-top: -202px;
+            margin-left: 2px;
+            display: none;
+        }
+
+        .delBtn {
+            z-index: 88888 !important;
+            display: none;
+            width: 200px;
+            border-radius: 5px 5px 0px 0px;
+            opacity: 1;
+            background-color: white;
+        }
+
+        /*修改商品*/
+        .updateUl_color .div_color {
+            margin-right: 10px !important;
+        }
+
+        .exhibition ul {
+            display: inline-block;
+        }
+
+        .exhibition ul li {
+            float: left;
+            line-height: 50px;
+        }
+
+        .exhibition .exhibitionImgSm {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+            border: 1px solid #e2e2e2;
+            margin-bottom: -65px;
+        }
+
+        .exhibition .exhibitionImgMl {
+            width: 120px;
+            height: 120px;
+            border-radius: 5px;
+            border: 1px solid #e2e2e2;
+            display: inline-block;
+            margin-bottom: -25px;
+        }
+
+        .exhibition .exhibitionImgMax {
+            width: 140px;
+            height: 140px;
+            border-radius: 5px;
+            border: 1px dashed #e2e2e2;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .exhibitionImgMax:hover {
+            opacity: 0.8;
+        }
+
+        .exhibitionImgMain {
+            border: 1px solid #ebebeb;
+            height: 330px;
+            width: 230px;
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .exhibitionImgMain img {
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+            border: 1px dashed #e2e2e2;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8" src="ueditor/third-party/jquery-1.10.2.js"></script>
+
+</head>
+<body class="body">
+<!--<table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>-->
+<div class="container">
+
+    <div class="main_top layui-col-md12">
+        <form class="layui-form" id="productSerachForm" name="productSerachForm">
+            <div class="layui-form-item">
+                <div class="layui-inline" style="width: 30%">
+                    <label class="layui-form-label">产品编号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="productId" name="phone" lay-verify="required|phone" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline" style="width: 27%">
+                    <label class="layui-form-label">产品名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" id="name" lay-verify="email" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态：</label>
+                    <div class="layui-input-block">
+                        <select id="isdel" name="isdel" lay-verify="required">
+                            <option value="">--</option>
+                            <option value="0">销售中</option>
+                            <option value="-1">已下架</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="searChBtn" style="width: 55px;border-radius: 25px;margin-left: 20px" type="button"
+                        class="layui-btn layui-btn-sm layui-btn-radius">
+                    <span style="font-size: 12px;;position: relative;right:15px"><i style="font-size: 12px"
+                        class="layui-icon">&#xe615;</i><span>搜索</span>
+                    </span>
+                </button>
+
+        </form>
+    </div>
+</div>
+
+<div class="main_content layui-col-md12">
+    <div class="layui-btn-group demoTable">
+        <button class="layui-btn layui-btn-sm _btn" data-type="getCheckData">
+            <span class="layui-icon">&#xe654;添加</span>
+        </button>
+        <button style="border-radius: 0px;border-right: none;" class="layui-btn layui-btn-sm _btn"
+                data-type="getCheckLength">
+            <span class="layui-icon" >&#xe640;下架</span>
+        </button>
+        <button class="layui-btn layui-btn-sm _btn" id="cover" data-type="getCheckCover">
+            <span class="layui-icon" style="margin-left: -10px">&#xe654;恢复</span>
+        </button>
+    </div>
+    <!--刷新按钮-->
+    <div style="float: right;margin-right: 20px">
+        <button id="reloadTab" style="height: 30px;width: 30px;border-radius: 5px"
+                class="layui-btn layui-btn-sm layui-btn-primary">
+            <i style="position: relative;bottom: 3px;right: 8px" class="layui-icon">&#x1002;</i>
+        </button>
+    </div>
+
+    <table class="layui-hide" id="LAY_table_user" lay-skin="nob" lay-filter="user"></table>
+
+    <script type="text/html" id="barDemo">
+        <a class="a_operater" lay-event="detail" style="background-color: #ffb800">
+            <i class="layui-icon layui-icon-edit">&#xe615;</i>详情</a>
+        <a class="a_operater" lay-event="del"><i class="layui-icon layui-icon-close">&#xe640;</i>下架</a>
+    </script>
+
+    <script type="text/html" id="isdelStatus">
+        {{# if (d.isdel == 0) { }}
+        <span style="background: rgba(13,185,51,0.72); padding: 3px 5px; border-radius: 10px;font-size: 8px; color: #ffffff;">销售中 </span>
+        {{# }else{ }}
+        <span style="background: #e95f6e; padding: 3px 5px; border-radius: 10px; font-size: 8px;color: #ffffff;"> 已下架 </span>
+        {{# } }}
+    </script>
+
+    <!--图片单元格-->
+    <script type="text/html" id="img">
+        <span style="background: rgba(13,185,51,0.72);
+            padding: 5px 5px; border-radius: 10px;font-size: 8px; color: #ffffff;cursor: pointer">查看</span>
+    </script>
+
+
+</div>
+
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="../frame/layui/layui.js"></script>
+
+<!--添加商品-->
+<div id="addProduct" class="" style="display: none;">
+    <form class="layui-form layui-form-pane" id="addProductForm"
+          name="addProductForm" enctype="multipart/form-data">
+
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-md8" style="padding: 20px 50px">
+
+                <!--商品主图片-->
+                <div class="layui-form-item" style="border: none">
+                    <div class="layui-input-block">
+                        <input onchange="openFile(event)" class="inputV" id="uploadfile" hidden="hidden"
+                               style="margin-left:170px;"
+                               type="file"
+                               name="uploadfile">
+                    </div>
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                        <legend>商品主图片</legend>
+                    </fieldset>
+                    <div onclick="$('input[id=uploadfile]').click();" id="mimgMainDiv">
+                        <p class="layui-icon"></p>
+                        <br>
+                    </div>
+                </div>
+
+                <!--缩略图-->
+                <div class="layui-form-item" style="border: none">
+                    <div class="layui-upload">
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                            <legend>商品缩略图</legend>
+                        </fieldset>
+                        <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                            商品详情预览图片：<span style="color: gray;font-size: 12px">（*请以依次添加图片，大小对应,至少准备四张不一样的 800*800 以上比例的图片）</span>
+                            <div class="layui-upload-list" id="demo2">
+                                <ul class="uploadImg FileList">
+                                    <input onchange="maxFile1(event)" id="maxfile1" hidden="hidden" type="file"
+                                           name="maxfile">
+                                    <input onchange="maxFile2(event)" id="maxfile2" hidden="hidden" type="file"
+                                           name="maxfile">
+                                    <input onchange="maxFile3(event)" id="maxfile3" hidden="hidden" type="file"
+                                           name="maxfile">
+                                    <input onchange="maxFile4(event)" id="maxfile4" hidden="hidden" type="file"
+                                           name="maxfile">
+
+                                    <!--大图片展示-->
+                                    <li>
+                                        <div class="maxImg" id="maxFileDiv1" onclick="$('input[id=maxfile1]').click();">
+                                            <p class="layui-icon" style=""></p>
+                                        </div>
+                                        <div class="maxImgA">
+                                            <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="maxImg" id="maxFileDiv2" onclick="$('input[id=maxfile2]').click();">
+                                            <p class="layui-icon" style=""></p>
+                                        </div>
+                                        <div class="maxImgA">
+                                            <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="maxImg" id="maxFileDiv3" onclick="$('input[id=maxfile3]').click();">
+                                            <p class="layui-icon" style=""></p>
+                                        </div>
+                                        <div class="maxImgA">
+                                            <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="maxImg" id="maxFileDiv4" onclick="$('input[id=maxfile4]').click();">
+                                            <p class="layui-icon" style=""></p>
+                                        </div>
+                                        <div class="maxImgA">
+                                            <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="uploadImg">
+                                    <li>
+                                        <div class="midImg" id="midFileDiv1">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="midImg" id="midFileDiv2">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="midImg" id="midFileDiv3">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="midImg" id="midFileDiv4">
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <!--中图片展示-->
+
+
+                                <ul class="uploadImg">
+
+                                    <!--小图片展示-->
+                                    <li>
+                                        <div class="minImg" id="minFileDiv1">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="minImg" id="minFileDiv2">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="minImg" id="minFileDiv3">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="minImg" id="minFileDiv4"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </blockquote>
+
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">商品描述</label>
+                    <div class="layui-input-block">
+                        <!--<textarea hidden="hidden" style="height: 200px" placeholder="请输入内容" lay-verify="required" name="describes"
+                              class="layui-textarea"></textarea>-->
+                        <script id="UEditorTxtDescribe" name="content2" type="text/plain"></script>
+                        <input name="describes" id="describes" hidden="hidden">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">商品详情排版</label>
+                    <div class="layui-input-block" id="">
+                        <!--<textarea placeholder="请输入内容" id="UEditorTxt" lay-verify="required" name="describe" class="layui-textarea"></textarea>-->
+                        <script id="UEditorTxt" name="content" type="text/plain">
+
+                        </script>
+                        <input class="inputV" name="detail" id="detail" hidden="hidden">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md4" style="background: #ebebeb;
+                   padding-bottom: 300px;padding-right: 20px;padding-top: 50px">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品名称</label>
+                    <div class="layui-input-block">
+                        <input name="name" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                               class="layui-input inputV">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">实卖价格</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="price" lay-verify="required" placeholder="￥" autocomplete="off"
+                                   class="layui-input inputV">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">库存</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="num" lay-verify="required" placeholder="" autocomplete="off"
+                               class="layui-input inputV">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">颜色</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-row checkboxDiv">
+                                <div class="layui-col-md12">
+                                    <ul class="ul_color">
+                                        <li>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: red"></div>
+                                                <input type="checkbox" value="红色" name="colorList[0].color" title="红色"
+                                                       lay-skin="primary" checked>
+
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: green"></div>
+                                                <input type="checkbox" value="绿色" name="colorList[1].color" title="绿色"
+                                                       lay-skin="primary">
+
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: blue"></div>
+                                                <input type="checkbox" value="蓝色" name="colorList[2].color" title="蓝色"
+                                                       lay-skin="primary">
+
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: black"></div>
+                                                <input type="checkbox" value="黑色" name="colorList[3].color" title="黑色"
+                                                       lay-skin="primary">
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color"
+                                                     style="background: white;border: 1px solid #ebebeb"></div>
+                                                <input type="checkbox" value="白色" name="colorList[4].color" title="白色"
+                                                       lay-skin="primary">
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color"
+                                                     style="background: #1E9FFF;border: 1px solid #ebebeb"></div>
+                                                <input type="checkbox" value="浅蓝" name="colorList[10].color" title="浅蓝"
+                                                       lay-skin="primary">
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: yellow"></div>
+                                                <input type="checkbox" value="黄色" name="colorList[5].color" title="黄色"
+                                                       lay-skin="primary">
+
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: #88500d"></div>
+                                                <input type="checkbox" value="褐色" name="colorList[6].color" title="褐色"
+                                                       lay-skin="primary">
+
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: #cc22c2"></div>
+                                                <input type="checkbox" value="紫色" name="colorList[7].color" title="紫色"
+                                                       lay-skin="primary">
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: pink"></div>
+                                                <input type="checkbox" value="粉色" name="colorList[8].color" title="粉色"
+                                                       lay-skin="primary">
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color" style="background: gray"></div>
+                                                <input type="checkbox" value="灰色" name="colorList[9].color" title="灰色"
+                                                       lay-skin="primary">
+                                            </div>
+                                            <div class="div_">
+                                                <div class="div_color" style="background:#ff6e00"></div>
+                                                <input type="checkbox" value="橙色" name="colorList[11].color" title="橙色"
+                                                       lay-skin="primary">
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--尺寸-->
+                <div class="layui-form-item" pane="">
+                    <label class="layui-form-label">大小</label>
+                    <div class="layui-input-block sizeDAXIAO">
+                        <input type="checkbox" name="productSizeList[0].size" value="35" title="35" checked>
+                        <input type="checkbox" name="productSizeList[1].size" value="36" title="36">
+                        <input type="checkbox" name="productSizeList[2].size" value="37" title="37">
+                        <input type="checkbox" name="productSizeList[3].size" value="38.5" title="38.5">
+                        <input type="checkbox" name="productSizeList[4].size" value="39" title="39">
+                        <input type="checkbox" name="productSizeList[5].size" value="40" title="40">
+                        <input type="checkbox" name="productSizeList[6].size" value="41.5" title="41.5">
+                        <input type="checkbox" name="productSizeList[7].size" value="42" title="42">
+                        <input type="checkbox" name="productSizeList[8].size" value="43.5" title="43.5">
+                        <input type="checkbox" name="productSizeList[9].size" value="45" title="45">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="float:right">
+                    <button class="layui-btn" value="1" type="button" id="formDemo">立即提交</button>
+                    <button type="reset" value="1" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--修改商品/商品详情-->
+<div id="updateProductDiv" class="layui-container" style="display: none;padding-top: 20px">
+    <form class="layui-form" action="" id="updateProductDivForm" name="updateProductDivForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输入名称" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">价格：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="price" required lay-verify="required" placeholder="¥"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">两位小数点</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">库存：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="num" required lay-verify="required" placeholder="数量"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">请输入正整数</div>
+        </div>
+        <!--颜色-->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">颜色：</label>
+                <div class="layui-input-inline">
+                    <div class="layui-row checkboxDiv">
+                        <div class="layui-col-md12">
+                            <ul class="ul_color updateUl_color">
+                                <li>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: red"></div>
+                                        <input type="checkbox" value="红色" name="colorList[0].color" title="红色"
+                                               lay-skin="primary">
+
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: green"></div>
+                                        <input type="checkbox" value="绿色" name="colorList[1].color" title="绿色"
+                                               lay-skin="primary">
+
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: blue"></div>
+                                        <input type="checkbox" value="蓝色" name="colorList[2].color" title="蓝色"
+                                               lay-skin="primary">
+
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: black"></div>
+                                        <input type="checkbox" value="黑色" name="colorList[3].color" title="黑色"
+                                               lay-skin="primary">
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color"
+                                             style="background: white;border: 1px solid #ebebeb"></div>
+                                        <input type="checkbox" value="白色" name="colorList[4].color" title="白色"
+                                               lay-skin="primary">
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color"
+                                             style="background: #1E9FFF;border: 1px solid #ebebeb"></div>
+                                        <input type="checkbox" value="浅蓝" name="colorList[10].color" title="浅蓝"
+                                               lay-skin="primary">
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: yellow"></div>
+                                        <input type="checkbox" value="黄色" name="colorList[5].color" title="黄色"
+                                               lay-skin="primary">
+
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: #88500d"></div>
+                                        <input type="checkbox" value="褐色" name="colorList[6].color" title="褐色"
+                                               lay-skin="primary">
+
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: #cc22c2"></div>
+                                        <input type="checkbox" value="紫色" name="colorList[7].color" title="紫色"
+                                               lay-skin="primary">
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: pink"></div>
+                                        <input type="checkbox" value="粉色" name="colorList[8].color" title="粉色"
+                                               lay-skin="primary">
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color" style="background: gray"></div>
+                                        <input type="checkbox" value="灰色" name="colorList[9].color" title="灰色"
+                                               lay-skin="primary">
+                                    </div>
+                                    <div class="div_">
+                                        <div class="div_color" style="background:#ff6e00"></div>
+                                        <input type="checkbox" value="橙色" name="colorList[11].color" title="橙色"
+                                               lay-skin="primary">
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--尺寸-->
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">大小：</label>
+            <div class="layui-input-block updateSizeDAXIAO">
+                <input type="checkbox" name="productSizeList[0].size" value="35" title="35">
+                <input type="checkbox" name="productSizeList[1].size" value="36" title="36">
+                <input type="checkbox" name="productSizeList[2].size" value="37" title="37">
+                <input type="checkbox" name="productSizeList[3].size" value="38.5" title="38.5">
+                <input type="checkbox" name="productSizeList[4].size" value="39" title="39">
+                <input type="checkbox" name="productSizeList[5].size" value="40" title="40">
+                <input type="checkbox" name="productSizeList[6].size" value="41.5" title="41.5">
+                <input type="checkbox" name="productSizeList[7].size" value="42" title="42">
+                <input type="checkbox" name="productSizeList[8].size" value="43.5" title="43.5">
+                <input type="checkbox" name="productSizeList[9].size" value="45" title="45">
+            </div>
+        </div>
+
+        <!--商品图片-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">缩略图：</label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md9">
+                                预览图：<span style="color: gray;font-size: 12px">*点击大图直接更换图片</span>
+                                <div id="demoText" style="display: inline-block"></div>
+                                <div class="layui-upload-list exhibition" id="demo2">
+                                    <ul class="updateImgList">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="layui-col-md3">
+                                <div class="">
+                                    <div class="exhibitionImgMain">
+                                    </div>
+                                    <div id="exhibitionImgMainTxt"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+        <!--商品描述-->
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述：</label>
+            <div class="layui-input-block">
+                <input type="text" id="describes" name="describes" placeholder="请输入内容" hidden="hidden"/>
+                <div class="UpdateUEditor1"></div>
+            </div>
+        </div>
+        <!--细节展示-->
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">细节展示：</label>
+            <div class="layui-input-block">
+                <input id="detail" name="detail" placeholder="请输入内容" class="layui-textarea" hidden="hidden"/>
+                <div class="UpdateDetailUEditor"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input class="layui-btn" id="updateBtn" value="立即提交"/>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--单元格修改-->
+<div id="updateDes" hidden="hidden">
+    <div style="padding: 0 2px"></div>
+</div>
+
+<!--更改主图片-->
+<div id="updateMainImg" hidden="hidden" style="padding: 20px">
+    <form id="updateMainImgForm" enctype="multipart/form-data">
+        <input id="imgMain" hidden="hidden" name="file" type="file" onchange="updateMainImg(event)">
+    </form>
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md7">
+            <button class="layui-btn" onclick="$('input[id=imgMain]').click();"
+                    style="background-color: #e2e2e2;color: black">
+                <i class="layui-icon">&#xe67c;</i>
+                <span>选择要更换的图片</span>
+            </button>
+            <div id="mainDa"
+                 style="border: 1px solid #ebebeb;width: 300px;height: 300px;margin-top: 20px;border-radius: 5px">
+            </div>
+        </div>
+        <div class="layui-col-md5">
+            <div id="mainSm"
+                 style="border: 1px solid #ebebeb;width: 200px;height: 200px;margin-top: 60px;border-radius: 5px">
+            </div>
+            <button id="updateImgMainBtn"
+                    style="float: right;margin-right: 30px; ;margin-top: 50px" class="layui-btn layui-btn-sm">点击上传
+            </button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function delImg(node, node2, node3, input) {
+        node.children('img').hover(function () {
+            node.next().show();
+            node.next().children('.delBtn').show();
+        }, function () {
+            node.next().hide();
+            node.next().next().hide();
+        })
+
+        node.next().hover(function () {
+            node.next().show();
+            node.next().children('.delBtn').show();
+        }, function () {
+            node.next().hide();
+            node.next().next().hide();
+        });
+        //按钮悬停时候，自己和背景层保持显示
+        node.next().children('.delBtn').hover(function () {
+            //自己显示
+            node.next().children('.delBtn').show();
+            //背景层显示
+            node.next().show();
+        });
+        node.next().children('.delBtn').click(function () {
+            node.empty().html("<p class='layui-icon'></p>");
+            //隐藏灰色背景
+            node.next().hide();
+            //清除中图片
+            node2.empty();
+            //清除小图片
+            node3.empty();
+            //清空input框的内容
+            var id = input.id;
+            $("#" + id + "").val("");
+        })
+    }
+
+    function checkIsIMg(event) {
+        var filepath = event.target.value;
+        var extStart = filepath.lastIndexOf(".");
+        var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+        if (ext != ".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG") {
+            return false;
+        }
+        return true;
+    }
+
+    //主图片回显
+    function openFile(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#mimgMainDiv").html("<img src=" + dataURL + ">");
+            }
+            else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+        };
+    };
+
+    /*更改图片回显*/
+    function updateMainImg(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#mainDa").html("<img width='300' height='300' src=" + dataURL + ">");
+                $("#mainSm").html("<img width='200' height='200' src=" + dataURL + ">");
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+        };
+    };
+
+    //大图片回显
+    function maxFile1(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#maxFileDiv1").html("<img src=" + dataURL + ">");
+                $("#midFileDiv1").html("<img src=" + dataURL + ">");
+                $("#minFileDiv1").html("<img src=" + dataURL + ">");
+                delImg($("#maxFileDiv1"), $("#midFileDiv1"), $("#minFileDiv1"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+
+        };
+
+    };
+
+    function maxFile2(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#maxFileDiv2").html("<img src=" + dataURL + ">");
+                $("#midFileDiv2").html("<img src=" + dataURL + ">");
+                $("#minFileDiv2").html("<img src=" + dataURL + ">");
+                delImg($("#maxFileDiv2"), $("#midFileDiv2"), $("#minFileDiv2"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+
+        };
+    };
+
+    function maxFile3(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#maxFileDiv3").html("<img src=" + dataURL + ">");
+                $("#midFileDiv3").html("<img src=" + dataURL + ">");
+                $("#minFileDiv3").html("<img src=" + dataURL + ">");
+                delImg($("#maxFileDiv3"), $("#midFileDiv3"), $("#minFileDiv3"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+
+        };
+    };
+
+    function maxFile4(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#maxFileDiv4").html("<img src=" + dataURL + ">");
+                $("#midFileDiv4").html("<img src=" + dataURL + ">");
+                $("#minFileDiv4").html("<img src=" + dataURL + ">");
+                delImg($("#maxFileDiv4"), $("#midFileDiv4"), $("#minFileDiv4"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+
+        };
+    };
+
+</script>
+<!--文本编辑器-->
+<script type="text/javascript" charset="utf-8" src="ueditor/third-party/jquery-1.10.2.js"></script>
+<script type="text/javascript" charset="utf-8" src="ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="ueditor/ueditor.all.js"></script>
+<script type="text/javascript" charset="utf-8" src="ueditor/lang/zh-cn/zh-cn.js"></script>
+
+
+<!--文本编辑器-->
+<script type="text/javascript" charset="utf-8">
+    var ueDescribe = UE.getEditor('UEditorTxt', {
+        toolbars: [
+
+            [
+                'anchor', //锚点
+                'undo', //撤销
+                'redo', //重做
+                'bold', //加粗
+                'indent', //首行缩进
+                'italic', //斜体
+                'underline', //下划线
+                'strikethrough', //删除线
+                'subscript', //下标
+                'fontborder', //字符边框
+                'superscript', //上标
+                'formatmatch', //格式刷
+                'horizontal', //分隔线
+                'removeformat', //清除格式
+                'time', //时间
+                'date', //日期
+                'insertrow', //前插入行
+                'insertcol', //前插入列
+                'mergeright', //右合并单元格
+                'mergedown', //下合并单元格
+                'deleterow', //删除行
+                'deletecol', //删除列
+                'splittorows', //拆分成行
+                'splittocols', //拆分成列
+                'splittocells', //完全拆分单元格
+                'deletecaption', //删除表格标题
+                'inserttitle', //插入标题
+                'mergecells', //合并多个单元格
+                'deletetable', //删除表格
+                'cleardoc', //清空文档
+                'insertparagraphbeforetable', //"表格前插入行"
+                'fontfamily', //字体
+                'fontsize', //字号
+                'paragraph', //段落格式
+                'edittable', //表格属性
+                'edittd', //单元格属性
+                'emotion', //表情
+                'spechars', //特殊字符
+                'searchreplace', //查询替换
+                'justifyleft', //居左对齐
+                'justifyright', //居右对齐
+                'justifycenter', //居中对齐
+                'justifyjustify', //两端对齐
+                'forecolor', //字体颜色
+                'backcolor', //背景色
+                'insertorderedlist', //有序列表
+                'insertunorderedlist', //无序列表
+                'directionalityltr', //从左向右输入
+                'directionalityrtl', //从右向左输入
+                'rowspacingtop', //段前距
+                'rowspacingbottom', //段后距
+                'imagenone', //默认
+                'imageleft', //左浮动
+                'imageright', //右浮动
+                'imagecenter', //居中
+                'wordimage', //图片转存
+                'lineheight', //行间距
+                'edittip ', //编辑提示
+                'customstyle', //自定义标题
+                'autotypeset', //自动排版
+                'touppercase', //字母大写
+                'tolowercase', //字母小写
+                'template', //模板
+                'scrawl', //涂鸦
+                'inserttable', //插入表格
+                'charts', // 图表
+            ]
+        ]
+    });
+    <!--添加商品文本编辑器-->
+    var ueDetail = UE.getEditor('UEditorTxtDescribe', {
+        toolbars: [
+
+            [
+                'anchor', //锚点
+                'undo', //撤销
+                'redo', //重做
+                'bold', //加粗
+                'indent', //首行缩进
+                'italic', //斜体
+                'underline', //下划线
+                'strikethrough', //删除线
+                'subscript', //下标
+                'fontborder', //字符边框
+                'superscript', //上标
+                'formatmatch', //格式刷
+                'horizontal', //分隔线
+                'removeformat', //清除格式
+                'time', //时间
+                'date', //日期
+                'insertrow', //前插入行
+                'insertcol', //前插入列
+                'mergeright', //右合并单元格
+                'mergedown', //下合并单元格
+                'deleterow', //删除行
+                'deletecol', //删除列
+                'splittorows', //拆分成行
+                'splittocols', //拆分成列
+                'splittocells', //完全拆分单元格
+                'deletecaption', //删除表格标题
+                'inserttitle', //插入标题
+                'mergecells', //合并多个单元格
+                'deletetable', //删除表格
+                'cleardoc', //清空文档
+                'insertparagraphbeforetable', //"表格前插入行"
+                'fontfamily', //字体
+                'fontsize', //字号
+                'paragraph', //段落格式
+                'edittable', //表格属性
+                'edittd', //单元格属性
+                'emotion', //表情
+                'spechars', //特殊字符
+                'searchreplace', //查询替换
+                'justifyleft', //居左对齐
+                'justifyright', //居右对齐
+                'justifycenter', //居中对齐
+                'justifyjustify', //两端对齐
+                'forecolor', //字体颜色
+                'backcolor', //背景色
+                'insertorderedlist', //有序列表
+                'insertunorderedlist', //无序列表
+                'directionalityltr', //从左向右输入
+                'directionalityrtl', //从右向左输入
+                'rowspacingtop', //段前距
+                'rowspacingbottom', //段后距
+                'imagenone', //默认
+                'imageleft', //左浮动
+                'imageright', //右浮动
+                'imagecenter', //居中
+                'wordimage', //图片转存
+                'lineheight', //行间距
+                'edittip ', //编辑提示
+                'customstyle', //自定义标题
+                'autotypeset', //自动排版
+                'touppercase', //字母大写
+                'tolowercase', //字母小写
+                'template', //模板
+                'scrawl', //涂鸦
+                'inserttable', //插入表格
+                'charts', // 图表
+            ]
+        ]
+    });
+</script>
+
+<script type="text/javascript" src="/js/test.js"></script>
+<script type="text/javascript" src="/js/productList.js"></script>
+
+</body>
+</html>

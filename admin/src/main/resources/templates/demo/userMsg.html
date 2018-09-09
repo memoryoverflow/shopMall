@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="../frame/layui/css/layui.css">
+    <link rel="stylesheet" href="../frame/static/css/style.css">
+
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/productList.css">
+
+    <link rel="icon" href="../frame/static/image/code.png">
+    <script type="text/javascript" charset="utf-8" src="ueditor/third-party/jquery-1.10.2.js"></script>
+
+    <style>
+        .main {
+            width: 600px;
+            background-color: white;
+            border: 0.5px solid #ebebeb;
+            padding-top: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 0px;
+            border-radius: 7px;
+            box-shadow: 1px 1px 1px 1px #efefef;
+            -moz-box-shadow: 1px 1px 1px 1px #efefef;
+            -webkit-box-shadow: 1px 1px 1px 1px #efefef;
+            color: gray;
+        }
+
+        .main .top {
+            width: 100%;
+            padding-top: 5px;
+        }
+
+        .main .top span {
+            margin-left: 20px;
+            font-size: 20px;
+            color: gray;
+        }
+
+        .main .top a {
+            float: right;
+            margin-right: 20px;
+        }
+
+        .main .conten {
+            padding: 20px;
+        }
+
+        .main .conten img {
+            border-radius: 100px;
+        }
+
+        .main .conten li {
+            line-height: 2em;
+        }
+
+        #erji {
+            display: none;
+            position: absolute;
+            z-index: 999999;
+            left: 480px;
+            padding-left: 10px;
+            top: 62px;
+            background-color: white;
+            box-shadow: 1px 1px 1px 1px #efefef;
+            -moz-box-shadow: 1px 1px 1px 1px #efefef;
+            -webkit-box-shadow: 1px 1px 1px 1px #efefef;
+            border: 1px solid #ebebeb;
+            color: gray;
+            padding: 5px 0px 5px 5px;
+        }
+
+        #erji p a {
+            font-size: 12px;
+            padding: 7px 20px;
+            color: gray;
+        }
+
+        #erji p a:hover {
+            background-color: #ebebeb;
+            border-radius: 3px;
+        }
+
+    </style>
+</head>
+<body class="body">
+<!--<table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>-->
+<div class="container">
+    <div class="main">
+        <div class="top">
+            <span>个人信息</span>
+            <a href="javascript:;" id="edit1">
+                <i class="layui-icon layui-icon-edit" style="font-size: 30px;">
+                    &#xe642;
+                </i>
+                <!--修改-->
+            </a>
+            <div id="erji">
+                <p><a href="javascript:;" class="updatePwd">修改密码</a></p>
+                <p><a href="javascript:;" class="updateImgBtn">修改头像</a></p>
+                <p><a href="javascript:;" class="updateAdminBtn">修改信息</a></p>
+            </div>
+        </div>
+        <hr>
+        <div class="conten">
+            <div class="layui-container">
+                <div class="layui-row">
+                    <div class="layui-col-md2" style="text-align: center">
+                        <img class="img" src="http://106.14.226.138:7777/commonuserimg.jpg" width="150px">
+                        <p class="ip" style="padding-top: 5px">127.0.0.1</p>
+                    </div>
+                    <div class="layui-col-md7">
+                        <ul>
+                            <li>
+                                <span class="role" style="font-size: larger">Admin</span></li>
+                            <li>
+                                <i class="layui-icon">
+                                    &#xe770;
+                                </i>
+                                <span class="name"></span></li>
+                            <li>
+                                <i class="layui-icon">
+                                    &#xe662;
+                                </i>
+                                <span class="usex">男</span>
+                            </li>
+                            <li>
+                                <i class="layui-icon">
+                                    &#xe641;
+                                </i>
+                                <span class="uemail">admin@qq.com</span>
+                            </li>
+                            <li>
+                                <i class="layui-icon">
+                                    &#xe641;
+                                </i>
+                                <span class="utel">135xxxxxxxx</span>
+                            </li>
+                            <li>
+                                <i class="layui-icon">
+                                    &#xe637;
+                                </i>
+                                <span class="date"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="../frame/layui/layui.js"></script>
+
+<script type="text/javascript" src="/js/test.js"></script>
+<script type="text/javascript" src="/js/userMsg.js"></script>
+
+
+<!--更改主图片-->
+<div id="updateMainImg" hidden="hidden" style="padding: 20px">
+    <form id="updateMainImgForm" enctype="multipart/form-data">
+        <input id="imgMain" hidden="hidden" name="file" type="file" onchange="updateMainImg(event)">
+    </form>
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md7">
+            <button class="layui-btn" onclick="$('input[id=imgMain]').click();"
+                    style="background-color: #e2e2e2;color: black">
+                <i class="layui-icon">&#xe67c;</i>
+                <span>选择要更换的图片</span>
+            </button>
+            <div id="mainDa"
+                 style="border: 1px solid #ebebeb;width: 300px;height: 300px;margin-top: 20px;border-radius: 5px">
+            </div>
+        </div>
+        <div class="layui-col-md5">
+            <div id="mainSm"
+                 style="border: 1px solid #ebebeb;width: 200px;height: 200px;margin-top: 60px;border-radius: 5px">
+            </div>
+            <button id="updateImgMainBtn"
+                    style="float: right;margin-right: 30px; ;margin-top: 50px" class="layui-btn layui-btn-sm">点击上传
+            </button>
+        </div>
+    </div>
+</div>
+<div id="updatePWD" style="width: 500px;display: none;padding-top: 20px">
+    <form class="layui-form" id="updatePasswordForm" name="updatePasswordForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">旧密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="oldP" required lay-verify="required" placeholder="请输入标题" autocomplete="off"
+                       class="layui-input">
+                <span></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="newsP" required lay-verify="required" placeholder="请输入标题"
+                       autocomplete="off" class="layui-input">
+                <span></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码确认</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" required lay-verify="required" placeholder="请输入标题"
+                       autocomplete="off" class="layui-input">
+                <span></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input class="layui-btn" lay-filter="formDemo" value="立即提交">
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--添加修改-->
+<div class="layui-container" id="updateAdminMsgDiv" style="display: none;width: 600px;padding-top: 20px">
+    <form class="layui-form" id="updateAdminForm" name="updateAdminForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input readonly="readonly" type="text" name="name" required lay-verify="required" placeholder="姓名" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱/登录名</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" required lay-verify="required" readonly="readonly" placeholder="邮箱" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="tel" required lay-verify="required" placeholder="电话" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男">
+                <input type="radio" name="sex" value="女" title="女">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" id="UpdateAdminBtn" class="layui-btn"
+                       lay-filter="formDemo" value="立即提交">
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    function checkIsIMg(event) {
+        var filepath = event.target.value;
+        var extStart = filepath.lastIndexOf(".");
+        var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+        if (ext != ".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG") {
+            return false;
+        }
+        return true;
+    }
+
+    /*更改图片回显*/
+    function updateMainImg(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#mainDa").html("<img width='300' height='300' src=" + dataURL + ">");
+                $("#mainSm").html("<img width='200' height='200' src=" + dataURL + ">");
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+        };
+    };
+
+
+    $(function () {
+        $("#edit1").hover(function () {
+            $("#erji").show();
+        })
+
+        $("#erji").hover(function () {
+            $("#erji").show();
+        }, function () {
+            $("#erji").hide();
+        })
+    })
+</script>
+</body>
+</html>

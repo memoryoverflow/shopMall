@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="../frame/layui/css/layui.css">
+    <link rel="stylesheet" href="../frame/static/css/style.css">
+
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/productList.css">
+
+    <link rel="icon" href="../frame/static/image/code.png">
+    <style>
+        .miaoshu {
+            text-align: right;
+            position: absolute;
+            top: 90px;
+            left: 550px;
+            width: 250px;
+        }
+
+        .miaoshu h3 {
+            font-size: 23px;
+        }
+
+        .miaoshu span:nth-child(2) {
+            margin-left: 120px;
+        }
+
+        .miaoshu {
+            line-height: 2.5em;
+        }
+
+        .miaoshu p {
+            color: gray;
+        }
+
+        .miaoshu button {
+            margin-top: 50px;
+            background-color: red;
+            border-radius: 0px;
+            height: 40px;
+        }
+
+        .Timedisplay {
+            height: 430px;
+            text-align: center;
+        }
+
+        .Timedisplay i {
+            font-size: 50px;
+            position: relative;
+            top: 5px;
+            color: red;
+        }
+
+        .time {
+            color: gray;
+            line-height: 2em;
+        }
+
+        /*预览图片*/
+        ul li {
+            float: left;
+            padding-right: 10px;
+        }
+
+        .uploadImg input {
+            display: none;
+        }
+
+        .uploadImg {
+            padding-top: 20px;
+        }
+
+        .uploadImg {
+            display: inline-block;
+        }
+
+        .maxImg {
+            width: 350px;
+            height: 200px;
+            border: 2px dashed #ebebeb;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .maxImg img {
+            width: 350px;
+            border-radius: 5px;
+            height: 200px;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .maxImg p {
+            font-size: 80px;
+            color: #1E9FFF;
+            position: relative;
+            top: 35%;
+            left: 37%;
+
+        }
+
+        .maxImgA {
+            background-color: gray;
+            opacity: 0.5;
+            width: 350px;
+            height: 200px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1003 !important;
+            position: relative;
+            margin-top: -202px;
+            margin-left: 2px;
+            display: none;
+        }
+
+        .delBtn {
+            width: 350px;
+            position: relative;
+            top: 160px;
+        }
+
+    </style>
+</head>
+<body class="body">
+<!--<table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>-->
+<div class="container">
+    <div class="layui-row">
+        <div class="main_top layui-col-md9" style="text-align: center;padding: 20px">
+            <div class="layui-carousel" id="test1" align="center">
+                <div carousel-item="">
+                    <div><img height="100%" src="/images/slide-1.png"></div>
+                    <div><img height="100%" src="/images/slide-4.png"></div>
+                    <div><img height="100%" src="/images/slide-1.png"></div>
+                </div>
+                <div class="miaoshu">
+                    <h3>
+                        <span id="explain1">最 新 新 款 爆 卖</span>
+                        <br>
+                        <span id="name">靴子</span>
+                    </h3>
+                    <p id="explain2">活动已经开始，不要错过!</p>
+                    <p class="p2" id="explain3">坚持你的团队一整天，每天，游戏日</p>
+                    <button class="layui-btn">马上抢购</button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="main_top Timedisplay">
+                <!--显示图标-->
+                <p style="margin-top: 20px;margin-bottom: 10px">
+                    <i class="layui-icon layui-icon-log">&#xe60e;倒计时</i>
+                </p><br>
+                <p>
+                    <!--展示倒计时-->
+                    <span style="font-size: 30px;position:relative;top:5px;color:red;"
+                          id="seckillStatus"></span>
+                </p>
+                <!--状态-->
+                <p class="glyphicon" style="font-size: 30px; color:red;margin-top: 30px" id="seckill_box">
+
+                </p>
+                <p style="margin-top: 30px;margin-bottom: 10px">
+                    <span style="font-size: 20px; color:red">库存量</span>
+                    <input id="stcok" type="text" style="background-color: whitesmoke;
+                        border: none;width: 50px;height: 30px;
+                        color: red;text-align: center;position: relative;top:-3px"
+                           value="0" readonly="readonly">
+                    <br>
+                </p>
+                <p>
+                    <span style="color: gray">
+                    商品编号:<br>
+                    <span class="pruductIdTxt"></span>
+                        </span>
+                </p>
+
+                <p class="time">
+                    开始：
+                    <span class="start"></span>
+                    <br>
+                </p>
+                <p class="time">
+                    结束：
+                    <span class="end"></span>
+                </p>
+
+                <p class="time">
+                    现在：
+                    <span class="now"></span>
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <div class="main_content layui-col-md12">
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="layui-btn-container">
+                    <button id="addSeckillExplainBtn" class="layui-btn">添加活动商品</button>
+                    <button id="changLogoBtn" class="layui-btn">更换LOGO</button>
+                    <button id="changDetailBtn" class="layui-btn">更换活动描述</button>
+                    <button id="settingStockBtn" class="layui-btn">设置库存</button>
+                    <button id="changeProductBtn" class="layui-btn">更换秒杀商品</button>
+                    <!--<button id="quartBtn" class="layui-btn">开启定时更新秒杀时间</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="changeSeckillProductDIV"  style="display: none;padding: 20px" >
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择更换</label>
+            <div class="layui-input-block">
+                <select id="p_Ids" name="id" lay-verify="required" >
+
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!--修改描述-->
+<div id="updateExplainMsgDiv" class="layui-container"  style="padding-top:50px;display: none">
+    <form class="layui-form" name="updateExplainForm" id="updateExplainForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品关键字</label>
+            <div class="layui-input-inline" style="width: 350px">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输入密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">*不要超过6个字符</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题一</label>
+            <div class="layui-input-inline" style="width: 350px">
+                <input type="text" name="explain1" required lay-verify="required" placeholder="请输入密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">*不要超过6个字符</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题二</label>
+            <div class="layui-input-inline" style="width: 350px">
+                <input type="text" name="explain2" required lay-verify="required" placeholder="请输入密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">*不要超过6个字符</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题三</label>
+            <div class="layui-input-inline" style="width: 350px">
+                <input type="text" name="explain3" required lay-verify="required" placeholder="请输入密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">*不要超过20个字符</div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input class="layui-btn" type="button" readonly="readonly" lay-filter="formDemo" id="submit" value="立即提交"/>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--更换LOGO-->
+<div class="layui-container" style="display: none;padding-top: 50px" id="changLOGODIV">
+    <div class="layui-upload">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>更换全部</legend>
+        </fieldset>
+        <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+            <button class="layui-btn" id="uapdateSeckillImgBtn">点击更换</button>
+            商品详情预览图片：<span style="color: gray;font-size: 12px">（*   1288*600比例以上）</span>
+            <div class="layui-upload-list" id="demo2">
+                <ul class="uploadImg FileList" id="updateSeckillUL">
+                    <form name="updateSeckillImgForm" id="updateSeckillImgForm" enctype="multipart/form-data">
+                        <input onchange="File1(event)" id="file1" hidden="hidden" type="file"
+                               name="file">
+                        <input onchange="File2(event)" id="file2" hidden="hidden" type="file"
+                               name="file">
+                        <input onchange="File3(event)" id="file3" hidden="hidden" type="file"
+                               name="file">
+                    </form>
+                    <!--大图片展示-->
+                    <li>
+                        <div class="maxImg" id="maxFileDiv1" onclick="$('input[id=file1]').click();">
+                            <p class="layui-icon" style=""></p>
+                        </div>
+                        <div class="maxImgA">
+                            <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="maxImg" id="maxFileDiv2" onclick="$('input[id=file2]').click();">
+                            <p class="layui-icon" style=""></p>
+                        </div>
+                        <div class="maxImgA">
+                            <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="maxImg" id="maxFileDiv3" onclick="$('input[id=file3]').click();">
+                            <p class="layui-icon" style=""></p>
+                        </div>
+                        <div class="maxImgA">
+                            <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </blockquote>
+    </div>
+    <div class="layui-btn-container" style="margin-top: 20px">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>更换单张</legend>
+        </fieldset>
+
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-normal" id="one">选择第一张</button>
+                    <button type="button" class="layui-btn" id="one1">开始上传</button>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-normal" id="two">选择第二张</button>
+                    <button type="button" class="layui-btn" id="two2">开始上传</button>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-normal" id="three">选择第三张</button>
+                    <button type="button" class="layui-btn" id="three3">开始上传</button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="one" style="padding: 20px"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--添加描述-->
+<div class="layui-container" id="addSeckillExplain" style="display: none">
+    <div class="layui-form-item" style="border: none;padding-top: 20px">
+        <form class="layui-form" action="" name="addSeckillForm" id="addSeckillForm" enctype="multipart/form-data">
+            <div class="layui-upload">
+                <label>轮播图片：</label>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                    商品详情预览图片：<span style="color: gray;font-size: 12px">（*   1288*600比例以上）</span>
+                    <div class="layui-upload-list" id="demo2">
+                        <ul class="uploadImg FileList" id="addSeckillUL">
+                            <input onchange="maxFile1(event)" id="maxfile1" hidden="hidden" type="file"
+                                   name="maxfile">
+                            <input onchange="maxFile2(event)" id="maxfile2" hidden="hidden" type="file"
+                                   name="maxfile">
+                            <input onchange="maxFile3(event)" id="maxfile3" hidden="hidden" type="file"
+                                   name="maxfile">
+                            <!--大图片展示-->
+                            <li>
+                                <div class="maxImg" id="maxFileDiv1" onclick="$('input[id=maxfile1]').click();">
+                                    <p class="layui-icon" style=""></p>
+                                </div>
+                                <div class="maxImgA">
+                                    <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="maxImg" id="maxFileDiv2" onclick="$('input[id=maxfile2]').click();">
+                                    <p class="layui-icon" style=""></p>
+                                </div>
+                                <div class="maxImgA">
+                                    <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="maxImg" id="maxFileDiv3" onclick="$('input[id=maxfile3]').click();">
+                                    <p class="layui-icon" style=""></p>
+                                </div>
+                                <div class="maxImgA">
+                                    <input class="layui-btn layui-btn-primary delBtn" value="移除"/>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </blockquote>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品关键字</label>
+                    <div class="layui-input-inline" style="width: 350px">
+                        <input type="text" name="name" required lay-verify="required" placeholder="请输入密码"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">*不要超过6个字符</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品id</label>
+                    <div class="layui-input-block" style="width: 350px">
+                        <select id="productIds" name="id" lay-verify="required">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题一</label>
+                    <div class="layui-input-inline" style="width: 350px">
+                        <input type="text" name="explain1" required lay-verify="required" placeholder="请输入密码"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">*不要超过6个字符</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题二</label>
+                    <div class="layui-input-inline" style="width: 350px">
+                        <input type="text" name="explain2" required lay-verify="required" placeholder="请输入密码"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">*不要超过6个字符</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题三</label>
+                    <div class="layui-input-inline" style="width: 350px">
+                        <input type="text" name="explain3" required lay-verify="required" placeholder="请输入密码"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">*不要超过20个字符</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">开启时间</label>
+                    <div class="layui-input-inline" style="width: 350px">
+                        <div class="layui-input-inline">
+                            <input type="text" name="kill_startTime" required lay-verify="required" class="layui-input"
+                                   id="startTime" placeholder="yyyy-MM-dd HH:mm:ss">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">结束时间</label>
+                    <div class="layui-input-inline" style="width: 350px">
+                        <div class="layui-input-inline">
+                            <input type="text" name="kill_endTime" required lay-verify="required" class="layui-input"
+                                   id="endTime" placeholder="yyyy-MM-dd HH:mm:ss">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input class="layui-btn" type="button" lay-filter="formDemo" id="submit" value="立即提交"/>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="../frame/layui/layui.js"></script>
+<script src="/js/seckiil.js"></script>
+<script src="https://cdn.bootcss.com/jquery.countdown/2.2.0/jquery.countdown.js"></script>
+
+<script type="text/javascript">
+    function delImg(node, node2, node3, input) {
+        node.children('img').hover(function () {
+            node.next().show();
+            node.next().children('.delBtn').show();
+        }, function () {
+            node.next().hide();
+            node.next().next().hide();
+        })
+
+        node.next().hover(function () {
+            node.next().show();
+            node.next().children('.delBtn').show();
+        }, function () {
+            node.next().hide();
+            node.next().next().hide();
+        });
+        //按钮悬停时候，自己和背景层保持显示
+        node.next().children('.delBtn').hover(function () {
+            //自己显示
+            node.next().children('.delBtn').show();
+            //背景层显示
+            node.next().show();
+        });
+        node.next().children('.delBtn').click(function () {
+            node.empty().html("<p class='layui-icon'></p>");
+            //隐藏灰色背景
+            node.next().hide();
+            //清空input框的内容
+            var id = input.id;
+            $("#" + id + "").val("");
+        })
+    }
+
+    function checkIsIMg(event) {
+        var filepath = event.target.value;
+        var extStart = filepath.lastIndexOf(".");
+        var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+        if (ext != ".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG") {
+            return false;
+        }
+        return true;
+    }
+
+    //更换回显
+    function File1(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#updateSeckillUL #maxFileDiv1").html("<img src=" + dataURL + ">");
+                $("#updateSeckillUL #midFileDiv1").html("<img src=" + dataURL + ">");
+                $("#updateSeckillUL #minFileDiv1").html("<img src=" + dataURL + ">");
+                delImg($("#updateSeckillUL #maxFileDiv1"), $("#updateSeckillUL #midFileDiv1"), $("#updateSeckillUL #minFileDiv1"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+        };
+
+    };
+
+    function File2(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#updateSeckillUL #maxFileDiv2").html("<img src=" + dataURL + ">");
+                $("#updateSeckillUL #midFileDiv2").html("<img src=" + dataURL + ">");
+                $("#updateSeckillUL #minFileDiv2").html("<img src=" + dataURL + ">");
+                delImg($("#updateSeckillUL #maxFileDiv2"), $("#updateSeckillUL #midFileDiv2"), $("#updateSeckillUL #minFileDiv2"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+
+        };
+    };
+
+    function File3(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#updateSeckillUL #maxFileDiv3").html("<img src=" + dataURL + ">");
+                $("#updateSeckillUL #midFileDiv3").html("<img src=" + dataURL + ">");
+                $("#updateSeckillUL #minFileDiv3").html("<img src=" + dataURL + ">");
+                delImg($("#updateSeckillUL #maxFileDiv3"), $("#updateSeckillUL #midFileDiv3"), $("#updateSeckillUL #minFileDiv3"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+        };
+    };
+
+    //发布回显
+    function maxFile1(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#addSeckillUL #maxFileDiv1").html("<img src=" + dataURL + ">");
+                $("#addSeckillUL #midFileDiv1").html("<img src=" + dataURL + ">");
+                $("#addSeckillUL #minFileDiv1").html("<img src=" + dataURL + ">");
+                delImg($("#addSeckillUL #maxFileDiv1"), $("#addSeckillUL #midFileDiv1"), $("#addSeckillUL #minFileDiv1"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+        };
+
+    };
+
+    function maxFile2(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#addSeckillUL #maxFileDiv2").html("<img src=" + dataURL + ">");
+                $("#addSeckillUL #midFileDiv2").html("<img src=" + dataURL + ">");
+                $("#addSeckillUL #minFileDiv2").html("<img src=" + dataURL + ">");
+                delImg($("#addSeckillUL #maxFileDiv2"), $("#addSeckillUL #midFileDiv2"), $("#addSeckillUL #minFileDiv2"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+
+        };
+    };
+
+    function maxFile3(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#addSeckillUL #maxFileDiv3").html("<img src=" + dataURL + ">");
+                $("#addSeckillUL #midFileDiv3").html("<img src=" + dataURL + ">");
+                $("#addSeckillUL #minFileDiv3").html("<img src=" + dataURL + ">");
+                delImg($("#addSeckillUL #maxFileDiv3"), $("#addSeckillUL #midFileDiv3"), $("#addSeckillUL #minFileDiv3"), input);
+            } else {
+                event.target.value = "";
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.msg("请选择图片", {icon: 2, anim: 6});
+                });
+            }
+
+        };
+    };
+
+
+    layui.use(['carousel', 'laydate'], function () {
+        var carousel = layui.carousel;
+        var laydate = layui.laydate;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            , width: '67%' //设置容器宽度
+            , arrow: 'hover' //始终显示箭头
+            , height: 400
+            , anim: 'fade' //切换动画方式
+        });
+        //日期时间选择器
+        laydate.render({
+            elem: '#startTime'
+            , type: 'datetime'
+        });
+        laydate.render({
+            elem: '#endTime'
+            , type: 'datetime'
+        });
+    });
+</script>
+<script type="text/javascript" src="/js/seckillManager.js"></script>
+
+</body>
+</html>
