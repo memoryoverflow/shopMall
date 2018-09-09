@@ -1,0 +1,130 @@
+.a {
+    height: 100% !important;
+    padding-left: 20%;
+}
+
+
+.pick-area, #address,.inPu{
+    border: 1px solid #c2c2c2;
+    display: block;
+    position: relative;
+    font-size: 14px;
+    background: #fff;
+    height: 35px;
+    border-radius: 3px;
+    text-decoration: none;
+    cursor: default;
+}
+#address{
+    margin-bottom: 15px;
+}
+/*请把地址补全 label 标签*/
+.range{
+    font-size: 16px;
+    color: red;
+    margin-bottom: 5px;
+}
+.range2{
+    position: relative;
+    top:75px;
+    left: -110px;
+    font-size: 16px;
+    color: red;
+}
+
+.pick-area{
+    margin-bottom: 40px!important;
+}
+#address,.inPu{
+    width: 420px;
+}
+.pick-show {
+    position: relative;
+    padding: 0 8px;
+    height: 35px !important;
+    border-radius: 3px;
+    padding-right: 20px!important;
+
+}
+
+.pick-show span {
+    float: left;
+    display: inline-block;
+    max-width: 100px;
+    height: 20px;
+    line-height: 18px;
+    padding: 0 3px;
+    margin-top: 3px;
+    margin: 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #333;
+    cursor: pointer;
+}
+
+.pick-city, .pick-county {
+    margin-left: 10px !important;
+}
+
+.pick-province, .pick-city, .pick-county {
+    font-size: 18px;
+    margin-top: 5px !important;
+}
+
+.pick-show span:hover {
+    color: #fff !important;
+    border-radius: 3px;
+}
+
+.pick-show span.pressActive {
+    background: #7894D4;
+    color: #fff !important;
+    border-radius: 3px
+}
+
+.pick-show em.pick-arrow {
+    border: 1px solid red;
+
+    position: absolute;
+    top: 10px !important;
+    right: 8px;
+    display: block;
+    border: 8px solid #999;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+}
+
+.pick-show i {
+    float: left;
+    position: absolute;
+    top: -10px;
+    color: #333;
+}
+
+.pick-list {
+    display: none;
+    position: absolute;
+    line-height: 36px;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    z-index: 999999999;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #dedede;
+    border-top: none;
+}
+
+.pick-list li {
+    margin: 0;
+    padding-left: 11px;
+    list-style: none;
+    color: #888;
+}
+
+.pick-list li:hover {
+    color: #fff;
+    font-weight: bold;
+}

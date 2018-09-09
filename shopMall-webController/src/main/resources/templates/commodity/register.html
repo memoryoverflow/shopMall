@@ -1,0 +1,373 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>注册</title>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/register.js"></script>
+
+    <link href="/css/style.css" rel='stylesheet' type='text/css'/>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+    </script>
+
+
+    <script type = "text/javascript"src = "/js/jquery.easy-ticker.js" ></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#demo').hide();
+            $('.vticker').easyTicker();
+        });
+
+    </script>
+    <!----start-alert-scroller---->
+    <!-- start menu -->
+    <link href="/css/megamenu.css" rel="stylesheet" type="text/css" media="all"/>
+    <script type="text/javascript" src="/js/megamenu.js"></script>
+    <script>$(document).ready(function () {
+        $(".megamenu").megamenu();
+    });</script>
+    <script src="/js/menu_jquery.js"></script>
+    <!-- //End menu -->
+    <!---move-top-top---->
+    <script type="text/javascript" src="/js/move-top.js"></script>
+    <script type="text/javascript" src="/js/easing.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1200);
+            });
+            var userId = $("#userId").text().replace(/\s|\xA0/g, "");
+            if (userId.length > 0) {
+                $(".out").show();
+            }
+        });
+    </script>
+    <!---//move-top-top---->
+
+    <style>
+        #shade {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: gray;
+            opacity: 0.5;
+            z-index: 10001;
+            display: none;
+        }
+
+        #imgLoading {
+            position: absolute;
+            padding: 13px;
+            border-radius: 3px;
+            top: 40%;
+            left: 45%;
+            width: 150px;
+            background-color: #FCFCFC;
+            border: 1px solid #ebebeb;
+            z-index: 10002;
+            display: none;
+        }
+
+        .sex {
+            cursor: pointer;
+        }
+
+    </style>
+    <!--layui-->
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script th:src="@{/layui/layui.all.js}"></script>
+    <script>
+        layui.use('layer', function(){
+            var layer=layui.layer;
+            layer.msg("1");
+        })
+    </script>
+</head>
+<body>
+<body>
+<div id="shade"></div>
+<div id="imgLoading">
+    <img src="/images/loading.gif" style="vertical-align:middle;">
+    数据加载中
+</div>
+<div class="header">
+    <div class="top-header">
+        <div class="wrap">
+            <div class="top-header-left">
+                <ul>
+                    <!---cart-tonggle-script---->
+                    <script type="text/javascript">
+                        $(function () {
+                            var $cart = $('#cart');
+                            $('#clickme').click(function (e) {
+                                e.stopPropagation();
+                                if ($cart.is(":hidden")) {
+                                    $cart.slideDown("slow");
+                                } else {
+                                    $cart.slideUp("slow");
+                                }
+                            });
+                            $(document.body).click(function () {
+                                if ($cart.not(":hidden")) {
+                                    $cart.slideUp("slow");
+                                }
+                            });
+                        });
+                    </script>
+                    <!---//cart-tonggle-script---->
+                    <li style="padding-right: 25px">
+                        <a href="../../mall/">
+                            <img style="position: relative;bottom:8px" width="18px" src="/images/indexLogo.png"/>
+                        </a>
+                    </li>
+                    <li><a class="cart" href="#"><span id="clickme"> </span></a></li>
+                    <!---start-cart-bag---->
+                    <div id="cart" style="margin-left: 50px">购物车是空的 <span>(0)</span></div>
+                    <!---start-cart-bag---->
+                    <li><a class="info" href="#"><span> </span></a></li>
+                </ul>
+            </div>
+            <div class="top-header-center">
+                <div class="top-header-center-alert-left">
+                    <h3>免费送货</h3>
+                </div>
+                <div class="top-header-center-alert-right">
+                    <div class="vticker">
+                        <ul>
+                            <li>适用于50美元或以上的订单。 <label>回报总是免费的.</label></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="top-header-right" style="margin-top: 3px">
+                <ul>
+                    <li><a href="../../user/getUserMsg">个人中心</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="../../order/orderList">已购商品</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a th:href="@{toLogin}">登录</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="javaScript:void(0)">注册</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li class="out" style="display: none"><a th:href="@{logout.do}">登出</a></li>
+                    <li class="out" style="display: none"><a href="javaScript:void(0)"></a><i
+                            style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="javaScript:void(0)">
+                        <shiro:principal property="name"/>
+                    </a></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!----start-mid-head---->
+    <div class="mid-header">
+        <div class="wrap">
+            <div class="mid-grid-left">
+                <form>
+                    <input type="text" placeholder="What Are You Looking for?"/>
+                </form>
+            </div>
+            <div class="mid-grid-right">
+                <a class="logo" th:href="@{/toIndex}"><span> </span></a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!----//End-mid-head---->
+    <!----start-bottom-header---->
+    <div class="header-bottom">
+        <div class="wrap">
+            <!-- start header menu -->
+            <ul class="megamenu skyblue">
+                <li class="grid"><a class="color2" href="#">男人</a>
+                </li>
+                <li class="active grid"><a class="color4" href="#">女人</a>
+                </li>
+                <li><a class="color5" href="#">孩子</a>
+                </li>
+                <li><a class="color6" href="#">运动</a>
+                </li>
+                <li><a class="color7" href="#">耐克运动服</a>
+                </li>
+                <li><a class="color8" href="#">尼基德</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+<!----//End-bottom-header---->
+<!---//End-header---->
+<!--- start-content---->
+<div class="content login-box">
+    <div class="login-main">
+        <!---->
+        <div class="wrap">
+            <h1>创建帐户</h1>
+            <div class="register-grids">
+                <form id="registerForm" method="post">
+                    <div class="register-top-grid">
+                        <h3>个人信息</h3>
+                        <div>
+							<span>用户名<label>*</label>
+								<i class="iStr" style="margin-left: 20px;font-size: 12px;color: #E45D5D"></i>
+							</span>
+                            <input type="text" name="name" placeholder="注册成功将无法修改">
+                        </div>
+                        <div>
+							<span>联系电话<label>*</label>
+							<i class="iStr" style="margin-left: 20px;font-size: 12px;color: #E45D5D"></i>
+							</span>
+                            <input type="text" name="tel">
+                        </div>
+                        <div>
+							<span>邮箱地址<label>*</label>
+							  <i class="iStr" style="margin-left: 20px;font-size: 12px;color: #E45D5D"></i>
+							</span>
+                            <input type="text" name="email">
+                        </div>
+                        <div>
+							<span>收货地址<label>*</label>
+							   <i class="iStr" style="margin-left: 20px;font-size: 12px;color: #E45D5D"></i>
+							</span>
+                            <input type="text" name="address">
+                        </div>
+                        <div>
+							<span style="font-weight: bolder">性别<label>*</label>
+						   	<input class="sex" id="sexMan" type="radio" name="sex" value="男" checked>
+                                <label class="sex" for="sexMan">男</label>
+                                &nbsp; &nbsp; &nbsp; &nbsp;
+							<input class="sex" id="sexWomen" type="radio" name="sex" value="女">
+                                <label class="sex" for="sexWomen">女</label>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="register-bottom-grid">
+                        <h3>登录信息</h3>
+
+                        <div>
+							<span>密码<label>*</label>
+							<i class="iStr" style="margin-left: 20px;font-size: 12px;color: #E45D5D"></i>
+							</span>
+
+                            <input id="pwd" type="password" name="password">
+                        </div>
+                        <div>
+							<span>确认密码<label>*</label>
+							   <i class="iStr" style="margin-left: 20px;font-size: 12px;color: #E45D5D"></i>
+							</span>
+                            <input type="password">
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <input id="submit" class="aa" disabled="disabled" value="submit"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!---- start-bottom-grids---->
+<div class="bottom-grids">
+    <div class="bottom-top-grids">
+        <div class="wrap">
+            <div class="bottom-top-grid">
+                <h4>GET HELP</h4>
+                <ul>
+                    <li><a th:href="@{/toContact}">Contact us</a></li>
+                    <li><a href="#">Shopping</a></li>
+                    <li><a href="#">NIKEiD</a></li>
+                    <li><a href="#">Nike+</a></li>
+                </ul>
+            </div>
+            <div class="bottom-top-grid">
+                <h4>ORDERS</h4>
+                <ul>
+                    <li><a href="#">Payment options</a></li>
+                    <li><a href="#">Shipping and delivery</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="bottom-top-grid last-bottom-top-grid">
+                <h4>REGISTER</h4>
+                <p>Create one account to manage everything you do with Nike, from your shopping preferences to your
+                    Nike+ activity.</p>
+                <a class="learn-more" href="#">Learn more</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="bottom-bottom-grids">
+        <div class="wrap">
+            <div class="bottom-bottom-grid">
+                <h6>EMAIL SIGN UP</h6>
+                <p>Be the first to know about new products and special offers.</p>
+                <a class="learn-more" href="#">Sign up now</a>
+            </div>
+            <div class="bottom-bottom-grid">
+                <h6>GIFT CARDS</h6>
+                <p>Give the gift that always fits.</p>
+                <a class="learn-more" href="#">View cards</a>
+            </div>
+            <div class="bottom-bottom-grid last-bottom-bottom-grid">
+                <h6>STORES NEAR YOU</h6>
+                <p>Locate a Nike retail store or authorized retailer.</p>
+                <a class="learn-more" href="#">Search</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!---- //End-bottom-grids---->
+<!--- //End-content---->
+<!---start-footer---->
+<div class="footer">
+    <div class="wrap">
+        <div class="footer-left">
+            <ul>
+                <li><a href="#">United Kingdom</a> <span> </span></li>
+                <li><a href="#">Terms of Use</a> <span> </span></li>
+                <li><a href="#">Nike Inc.</a> <span> </span></li>
+                <li><a href="#">Launch Calendar</a> <span> </span></li>
+                <li><a href="#">Privacy & Cookie Policy</a> <span> </span></li>
+                <li><a href="#">Cookie Settings</a></li>
+                <div class="clear"></div>
+            </ul>
+        </div>
+        <div class="footer-right">
+            <p>More Templates <a href="http://www.cssmoban.com/" target="_blank" title="ģ��֮��">ģ��֮��</a></p>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    /*
+                    var defaults = {
+                          containerID: 'toTop', // fading element id
+                        containerHoverID: 'toTopHover', // fading element hover id
+                        scrollSpeed: 1200,
+                        easingType: 'linear'
+                     };
+                    */
+
+                    $().UItoTop({easingType: 'easeOutQuart'});
+
+                });
+            </script>
+            <a href="#" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 1;"> </span></a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!---//End-footer---->
+<!---//End-wrap---->
+
+</body>
+</html>
+

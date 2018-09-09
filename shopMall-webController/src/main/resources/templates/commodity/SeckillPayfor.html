@@ -1,0 +1,583 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>订单支付</title>
+    <link href="/css/style.css" rel='stylesheet' type='text/css'/>
+    <!--layui-->
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script th:src="@{/layui/layui.all.js}"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <!----start-alert-scroller---->
+    <script type="text/javascript" src="/js/jquery.easy-ticker.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#demo').hide();
+            $('.vticker').easyTicker();
+        });
+    </script>
+    <!----start-alert-scroller---->
+    <!-- start menu -->
+    <link href="/css/megamenu.css" rel="stylesheet" type="text/css" media="all"/>
+    <script type="text/javascript" src="/js/megamenu.js"></script>
+    <script>$(document).ready(function () {
+        $(".megamenu").megamenu();
+    });</script>
+    <script src="/js/menu_jquery.js"></script>
+    <!-- //End menu -->
+    <!---move-top-top---->
+    <script type="text/javascript" src="/js/move-top.js"></script>
+    <script type="text/javascript" src="/js/easing.js"></script>
+    <script type="text/javascript">
+        function getUserMsg() {
+            var uMsg = "";
+            $.ajaxSettings.async = true;
+            $.post("/user/isLogin", {}, function (data) {
+                $("#userHeadImgg").html("<img style='border-radius: 100px;border:1px solid white;'" +
+                    " width='25' height='25' src=" + data.data.img + ">");
+            })
+        };getUserMsg();
+
+        var payFor, one, two;
+
+        function countDown(secs) {
+            var jumpTo = document.getElementById('time');
+            jumpTo.innerHTML = secs;
+            if (--secs > 0) {
+                setTimeout("countDown(" + secs + ")", 1000);
+            }
+
+
+        }
+
+        //支付倒计时
+        function payForcountDown(secs) {
+            var jumpTo = document.getElementById('payTime');
+            jumpTo.innerHTML = secs;
+            if (--secs > 0) {
+                payFor = setTimeout("payForcountDown(" + secs + ")", 1000);
+            } else {
+                //alert("支付失败");
+                layui.use(['layer', 'jquery'], function () {
+                    var layer = layui.layer;
+                    var $ = layui.jquery;
+                    layer.open({
+                        type: 1,
+                        title: '支付失败',
+                        skin: '', //加上边框
+                        shade: 0.3,
+                        move: true, //不允许当前用户拖动当前窗口
+                        area: ['300px', '200px'], //宽高
+                        content: $("#payforFalsetips")
+                        , cancel: function () {
+                            $("#payforFalsetips").hide();
+                        }
+                        , success: function () {
+                            layer.close(one);
+                            layer.close(two);
+                            $("#pay").hide();
+                        }
+                        , closeBtn: 0
+                    });
+                    payfalse(3, "../../payFor/false/" + $("#productId").val());
+                })
+            }
+        }
+
+        //倒计时未支付后跳转
+        function payfalse(secs, url) {
+            var jumpTo = document.getElementById('payfalseTime');
+            jumpTo.innerHTML = secs;
+            if (--secs > 0) {
+                setTimeout("payfalse(" + secs + ",'" + url + "')", 1000);
+            } else {
+                location.href = url;
+            }
+        }
+
+
+        //支付完成后提示
+        function countDown2(secs, url) {
+            clearTimeout(payFor);
+            var jumpTo = document.getElementById('time2');
+            jumpTo.innerHTML = secs;
+            if (--secs > 0) {
+                setTimeout("countDown2(" + secs + ",'" + url + "')", 1000);
+            } else {
+                location.href = url;
+            }
+        }
+
+        //停止计时
+        function stop() {
+            clearTimeout(payFor);
+        }
+
+
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1200);
+            });
+
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                //支付弹出框
+                $(".next").click(function () {
+
+                    one = layer.open({
+                        type: 1,
+                        title: '在线支付',
+                        skin: '', //加上边框
+                        shade: 0.3,
+                        move: false, //不允许当前用户拖动当前窗口
+                        area: ['800px', '560px'], //宽高
+                        content: $("#pay"),
+                        cancel: function (index) {
+                            $("#pay").hide();
+                        }
+                    });
+
+
+                })
+                $(".payforNode").click(function () {
+                    countDown(5);
+                    var orderId = $(".orderId").text();
+                    //layer.msg(orderId)
+                    two = layer.open({
+                        type: 1,
+                        title: false,
+                        closeBtn: 0,
+                        shadeClose: false,
+                        skin: 'yourclass',
+                        content: $("#tips"),
+                        cancel: function (index) {
+                            $("#tips").hide();
+                        }
+                    });
+                    $.post("../../payFor/seckillMoney/paying", {orderId: orderId, isPayfor: 1}, function (back) {
+                        if (back.status = 200) {
+                            $(".isPaying").hide();
+                            $(".paySucess").show();
+                            $(".stu").text("支付成功");
+                            $(".tt").text("秒后跳转...");
+                            countDown2(3, 'http://106.14.226.138/order/orderList');
+                        } else {
+                            $(".isPaying").hide();
+                            $(".paySucess").show();
+                            $(".stu").text("支付失败");
+                            layer.msg('支付失败', {time: 2000, icon: 5});
+                            layer.close(two);
+                        }
+                    }).error(function () {
+                        $(".isPaying").hide();
+                        $(".paySucess").show();
+                        $(".stu").text("支付失败");
+                        layer.msg('支付失败', {time: 2000, icon: 5});
+                        layer.close(two);
+                    })
+                })
+            })
+        });
+
+
+    </script>
+    <!---//move-top-top---->
+    <style>
+        .one_td {
+            text-align: right;
+        }
+
+        #payTime {
+            color: red;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" id="productId" th:value="${productId}">
+
+
+<div align='center' style="display: none;" id="pay">
+    <img width='450px' src='/images/payforzfb.jpg'>
+    <div>*扫码后果自负，模拟支付</div>
+    <br>
+    <div><input class='layui-btn layui-btn-danger payforNode' value='点击模拟支付'></div>
+</div>
+
+<div align="center" style="display: none;height: 100px;width: 300px;padding-top: 60px" id="tips">
+    <div style="font-size: 15px" class="isPaying">正在支付......<span id="time"></span></div>
+
+
+    <div style="font-size: 17px;display: none" class="paySucess"><span class="stu">
+    </span>&nbsp;<span id="time2"></span>&nbsp;<span class="tt"></span>
+    </div>
+</div>
+
+<div align="center"
+     style="display: none;height: 80px;width: 300px;padding-top: 60px" id="payforFalsetips">
+    <div style="font-size: 15px">支付失败... <span id="payfalseTime"></span></div>
+</div>
+
+
+<!---start-wrap---->
+<!---start-header---->
+<div class="header">
+    <div class="top-header">
+        <div class="wrap">
+            <div class="top-header-left">
+                <ul>
+                    <!---cart-tonggle-script---->
+                    <script type="text/javascript">
+                        $(function () {
+                            var $cart = $('#cart');
+                            $('#clickme').click(function (e) {
+                                e.stopPropagation();
+                                if ($cart.is(":hidden")) {
+                                    $cart.slideDown("slow");
+                                } else {
+                                    $cart.slideUp("slow");
+                                }
+                            });
+                            $(document.body).click(function () {
+                                if ($cart.not(":hidden")) {
+                                    $cart.slideUp("slow");
+                                }
+                            });
+                        });
+                    </script>
+                    <!---//cart-tonggle-script---->
+                    <li style="padding-right: 25px"><a href="../../mall/"><img style="position: relative;bottom:8px"
+                                                                               width="18px"
+                                                                               src="/images/indexLogo.png"/></a></li>
+                    <li><a class="cart" href="#"><span id="clickme"> </span></a></li>
+                    <!---start-cart-bag---->
+                    <div id="cart" style="margin-left: 50px">
+                        <a style="color: white" th:href="@{../../shopCart/toShoipCart}">购物车是空的</a>
+                        <span id="cart_num" class="badge"
+                              style="border-radius: 10px;background-color: red;padding: 3px 8px;color: white">(0)</span>
+                    </div>
+                    <!---start-cart-bag---->
+                    <li><a class="info" href="#"><span> </span></a></li>
+                </ul>
+            </div>
+            <div class="top-header-center">
+                <div class="top-header-center-alert-left">
+                    <h3>免费送货</h3>
+                </div>
+                <div class="top-header-center-alert-right">
+                    <div class="vticker">
+                        <ul>
+                            <li>适用于50美元或以上的订单。 <label>回报总是免费的.</label></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="top-header-right">
+                <ul>
+                    <li><a href="../../user/getUserMsg">个人中心</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="../../order/orderList">已购商品</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a th:href="@{toLogin}">登录</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="javaScript:void(0)">注册</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a th:href="@{../../mall/logout.do}">登出</a></li>
+                    <li><a href="javaScript:void(0)"></a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="javaScript:void(0)">
+                        <shiro:principal property="name"/>
+                    </a></li>
+                    <li>
+                        <div id="userHeadImgg"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+</div>
+</div>
+<!----//End-bottom-header---->
+<!---//End-header---->
+<!--- start-content---->
+<div class="content login-box" style="background-color: #ebebeb;">
+    <div class="login-main" style="padding-top: 50px">
+        <!--<div class="wrap">-->
+        <div class="layui-container">
+            <div class="layui-row" style="background-color: white;padding:40px 50px;
+                border-radius: 3px;border: 1px solid #D6D6D6;margin-bottom: 50px">
+                <div class="layui-col-md2">
+                    <img src="/images/order-success.jpg">
+                </div>
+                <div class="layui-col-md10">
+                    <div style="border-bottom: 1px solid #D6D6D6;padding-bottom: 20px;margin-bottom: 20px">
+                        <div>
+                            <span style="font-size: 23px">订单提交成功，应付金额
+                                <span style="color: red;font-size: 25px"
+                                      th:text="${orderMsg.totalPrice}"></span> 元</span>
+                        </div>
+                        <br>
+                        <div><font color="#666666" size="2px">订单号：<span class="orderId"
+                                                                        th:text="${orderMsg.orderId}"></span>
+                            请您在<span id="payTime"> 10 </span> 秒
+                            内完成支付，否则订单会被自动取消</font></div>
+                        <script type="text/javascript">
+                            payForcountDown(20);
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <!--支付div-->
+            <div>
+                <div><font size="3px">在线支付</font></div>
+            </div>
+            <br>
+            <div id="pay">
+                <form>
+                    <div class="layui-row" style="background-color: white;padding: 35px 50px 25px 50px;
+                    border-radius: 3px;border-top: 1px solid #D6D6D6">
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="1" checked>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/zfb.jpg">
+                            </label>
+                        </div>
+                        <div class="layui-col-md10" style="padding-left: 8px">
+                            <label>
+                                <input type="radio" name="pay" value="2">
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/weixin.jpg">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="layui-row" style="background-color: white;padding:0 0 25px 50px;">
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="4" disabled/>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/zgyh.jpg">
+                            </label>
+                        </div>
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="2" disabled/>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/jsyh.jpg">
+                            </label>
+                        </div>
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="2" disabled/>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/nyyh.jpg">
+                            </label>
+                        </div>
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="2" disabled/>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/gsyh.jpg">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="layui-row" style="background-color: white;padding:0 0 45px 50px;
+                    border-radius: 3px;border-bottom: 1px solid #D6D6D6">
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="1" disabled/>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/jtyh.jpg">
+                            </label>
+                        </div>
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="2" disabled>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/zsyh.jpg">
+                            </label>
+                        </div>
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="2" disabled/>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/yzcxyh.jpg">
+                            </label>
+                        </div>
+                        <div class="layui-col-md2">
+                            <label>
+                                <input type="radio" name="pay" value="2" disabled/>
+                                &nbsp;&nbsp;&nbsp;
+                                <img src="/images/xyyy.jpg">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <div class="layui-col-md12">
+                            <input class="layui-btn layui-btn-danger next"
+                                   style="float: right;width: 170px;margin-top: 30px" value="下一步"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <!--<div class="layui-card">
+               <div class="layui-card-header" style="background-color:#F0F8FF">
+                   <h2 style="color: #52a0e5">订单状态信息
+                   <span style="float: right;color: red;">总金额：&nbsp;&nbsp;¥<span style="float: right;color: red;font-size: 18px" th:text="${orderMsg.totalPrice}"></span></span>
+                   </h2>
+               </div>
+               <div class="layui-card-body">
+                   <table id="payforTab" class="layui-table">
+                       <colgroup>
+                           <col width="150">
+                           <col width="">
+                       </colgroup>
+                       <tbody>
+                       <tr>
+                           <td class="one_td">订单号：</td>
+                           <td th:text="${orderMsg.orderId}"></td>
+                       </tr>
+                       <tr>
+                           <td class="one_td">付款状态：</td>
+                           <td style="text-align: center">
+                               <ul style="list-style: none;">
+                                   <li style="float: left;color: red" th:text="${orderMsg.isPayfor==0}?'未支付':'已支付'">
+
+                                   </li>
+                                   <li>
+                                       <img id="payforimg" src="/images/z-payfor.png">
+                                       <p>*一旦扫码后果自负</p>
+                                   </li>
+                               </ul>
+
+                           </td>
+                       </tr>
+                       <tr>
+                           <td class="one_td">配送状态：</td>
+                           <td>未发货</td>
+                       </tr>
+                       </tbody>
+                   </table>
+
+                    <table class="layui-table" >
+                        <ul id="selectpayfor" style="list-style: none;margin-left: 45%">
+                            <li style="float: left;width: 100px">
+                                <img onclick="changePayforZ()" class="selectPayForImg" style="cursor: pointer" width="50px" th:src="@{/images/payfor.jpg}">
+                            </li>
+                            <li style="float: left;width: 100px" >
+                                <img onclick="changePayforW()" class="selectPayForImg" style="cursor: pointer" width="50px" th:src="@{/images/wechat.jpg}">
+                            </li>
+                        </ul>
+
+                    </table>
+               </div>
+            </div>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+<!---- start-bottom-grids---->
+<div class="bottom-grids">
+    <div class="bottom-top-grids">
+        <div class="wrap">
+            <div class="bottom-top-grid">
+                <h4>GET HELP</h4>
+                <ul>
+                    <li><a th:href="@{toContact}">Contact us</a></li>
+                    <li><a href="#">Shopping</a></li>
+                    <li><a href="#">NIKEiD</a></li>
+                    <li><a href="#">Nike+</a></li>
+                </ul>
+            </div>
+            <div class="bottom-top-grid">
+                <h4>ORDERS</h4>
+                <ul>
+                    <li><a href="#">Payment options</a></li>
+                    <li><a href="#">Shipping and delivery</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="bottom-top-grid last-bottom-top-grid">
+                <h4>REGISTER</h4>
+                <p>Create one account to manage everything you do with Nike, from your shopping preferences to your
+                    Nike+ activity.</p>
+                <a class="learn-more" href="#">Learn more</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="bottom-bottom-grids">
+        <div class="wrap">
+            <div class="bottom-bottom-grid">
+                <h6>EMAIL SIGN UP</h6>
+                <p>Be the first to know about new products and special offers.</p>
+                <a class="learn-more" href="#">Sign up now</a>
+            </div>
+            <div class="bottom-bottom-grid">
+                <h6>GIFT CARDS</h6>
+                <p>Give the gift that always fits.</p>
+                <a class="learn-more" href="#">View cards</a>
+            </div>
+            <div class="bottom-bottom-grid last-bottom-bottom-grid">
+                <h6>STORES NEAR YOU</h6>
+                <p>Locate a Nike retail store or authorized retailer.</p>
+                <a class="learn-more" href="#">Search</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!---- //End-bottom-grids---->
+<!--- //End-content---->
+<!---start-footer---->
+<div class="footer">
+    <div class="wrap">
+        <div class="footer-left">
+            <ul>
+                <li><a href="#">United Kingdom</a> <span> </span></li>
+                <li><a href="#">Terms of Use</a> <span> </span></li>
+                <li><a href="#">Nike Inc.</a> <span> </span></li>
+                <li><a href="#">Launch Calendar</a> <span> </span></li>
+                <li><a href="#">Privacy & Cookie Policy</a> <span> </span></li>
+                <li><a href="#">Cookie Settings</a></li>
+                <div class="clear"></div>
+            </ul>
+        </div>
+        <div class="footer-right">
+            <p>More Templates <a href="http://www.cssmoban.com/" target="_blank" title="ģ��֮��">ģ��֮��</a></p>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    /*
+                    var defaults = {
+                          containerID: 'toTop', // fading element id
+                        containerHoverID: 'toTopHover', // fading element hover id
+                        scrollSpeed: 1200,
+                        easingType: 'linear'
+                     };
+                    */
+
+                    $().UItoTop({easingType: 'easeOutQuart'});
+
+                });
+            </script>
+            <a href="#" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 1;"> </span></a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!---//End-footer---->
+<!---//End-wrap---->
+</body>
+</html>
+

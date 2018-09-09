@@ -1,0 +1,19 @@
+/*主体div*/
+.content{
+    background-color: #ebebeb;padding: 10px 300px";
+}
+
+/*左边导航栏*/
+.leftSlide{
+    background-color: white;width:200px;height: 500px;padding-left: 50px;padding-top: 30px
+}
+
+.active{
+    color: red;
+}
+
+/*订单div*/
+.orderDiv{
+    border: 1px solid none;padding: 0 30px 10px 30px;
+    background-color: white;
+}

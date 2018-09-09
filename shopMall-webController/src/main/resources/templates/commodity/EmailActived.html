@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>账户激活</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.js"></script>
+    <style>
+        div{
+            width: 750px;
+            height: 430px;
+            margin: 0 auto;
+            border: 1px solid white;
+        }
+        h4{
+            margin-top: 70px;
+            margin-left: 50px;
+            color: #52a0e5;
+        }
+        p{
+            margin-left: 90px;
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: inherit;
+        }
+        #s{
+            font-size: 16px;
+            color: #c2c2c2;
+        }
+        h1{
+            color: #52a0e5;
+            margin-top: 20px;
+            margin-left: 200px;
+        }
+        h3{
+            color: #52a0e5;
+            margin-top: 50px;
+            margin-left: 200px;
+        }
+    </style>
+</head>
+<body style="padding-top: 30px">
+   <div style="background-image: url('/images/email1.png')">
+       <!--<img th:src="@{/images/email1.png}" class="img-responsive">-->
+       <h4>账户激活邮件</h4>
+       <p>欢迎注册南猫商城 &nbsp;   &nbsp;<span id="s">前往登录:<a href="http://106.14.226.138:9999/mall/toLogin">http://106.14.226.138:9999/mall/toLogin</a></span></p>
+       <h3><span> &nbsp; &nbsp;</span>*账号:<span th:text="${email}">944518695@qq.com</span></h3>
+       <h1 th:text="${msg}">邮件激活成功~</h1>
+   </div>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>个人中心</title>
+    <link href="/css/style.css" rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/carts.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script src="/js/userMsg.js"></script>
+    <script src="/js/cart.js"></script>
+
+    <!--layui-->
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script th:src="@{/layui/layui.js}"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+
+    <script type="text/javascript" src="/js/jquery.easy-ticker.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#demo').hide();
+            $('.vticker').easyTicker();
+        });
+    </script>
+
+    <link href="/css/megamenu.css" rel="stylesheet" type="text/css" media="all"/>
+    <script type="text/javascript" src="/js/megamenu.js"></script>
+    <script>$(document).ready(function () {
+        $(".megamenu").megamenu();
+    });</script>
+    <script src="/js/menu_jquery.js"></script>
+
+
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1200);
+            });
+        });
+    </script>
+
+    <style>
+        #u {
+            padding: 0 30px 10px 30px;
+            margin-left: 20px;
+            background-color: white;
+        }
+
+        #u_left {
+            border-right: 1px solid #ebebeb;
+            margin-right: 20px;
+            padding-right: 20px;
+            margin-top: 50px;
+            height: 450px;
+        }
+
+        #u_left div {
+            border-bottom: 1px solid #ebebeb;
+            padding-bottom: 20px;
+        }
+
+        #u ul li {
+            display: inline-block;
+        }
+
+        #u ul li img {
+            border-radius: 100px;
+        }
+
+        #u ul li:nth-child(2) {
+            padding-left: 20px;
+        }
+
+        #userMsg {
+            margin-top: 50px;
+        }
+
+        .layui-tab-item {
+            padding-top: 50px;
+        }
+
+        .userformdiv {
+            width: 400px;
+        }
+
+        #mainDa {
+            border: 1px solid #ebebeb;
+            width: 250px;
+            height: 250px;
+            margin-top: 20px;
+            border-radius: 5px
+        }
+
+        #mainSm {
+            border: 1px solid #ebebeb;
+            width: 200px;
+            height: 200px;
+            border-radius: 5px;
+        }
+
+        #mainSmtiptop {
+            margin-top: 20px; margin-bottom: 10px;color: green;font-size: 13px;
+        }
+
+        #mainSsm {
+            border: 1px solid #ebebeb;width: 150px;height: 150px; margin-top: 60px; border-radius: 100px;
+            float: left;
+        }
+
+        #mianSsmTip {
+            width: 150px;text-align: center;font-size: 13px;color: gray;
+        }
+
+        #mainSmtip {
+            width: 200px;text-align: center;color: gray;font-size: 13px;
+        }
+
+        .left_slide ul li {
+            line-height: 2em;
+            font-size: 15px;
+        }
+
+        .left_tab {
+            color: #666666;
+        }
+
+        .left_tab:hover {
+            color: red;
+        }
+
+        .left_title {
+            padding-bottom: 15px;
+            padding-top: 15px;
+        }
+
+        .active {
+            color: red;
+        !important;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="top-header" style="height: 35px">
+        <div class="wrap">
+            <div class="top-header-left">
+                <ul>
+                    <!---cart-tonggle-script---->
+                    <script type="text/javascript">
+                        $(function () {
+                            var $cart = $('#cart');
+                            $('#clickme').click(function (e) {
+                                e.stopPropagation();
+                                if ($cart.is(":hidden")) {
+                                    $cart.slideDown("slow");
+                                } else {
+                                    $cart.slideUp("slow");
+                                }
+                            });
+                            $(document.body).click(function () {
+                                if ($cart.not(":hidden")) {
+                                    $cart.slideUp("slow");
+                                }
+                            });
+                        });
+                    </script>
+                    <!---//cart-tonggle-script---->
+                    <li style="padding-right: 25px"><a href="../../mall/">
+                        <img style="position: relative;bottom:8px" width="18px" src="/images/indexLogo.png"/>
+                    </a></li>
+                    <li><a class="cart" href="#"><span id="clickme"> </span></a></li>
+                    <!---start-cart-bag---->
+                    <div id="cart" style="margin-top:5px;margin-left: 50px">
+                        <span>
+                            <a id="Cart" style="color: white;font-size: 13px" th:href="@{../../shopCart/toShoipCart}">购物车是空的</a></span>
+                        <span id="cart_num" class="badge"
+                              style="border-radius: 10px;background-color: red;padding: 3px 8px;color: white">0</span>
+                    </div>
+                    <!---start-cart-bag---->
+                    <li><a class="info" href="#"><span> </span></a></li>
+                </ul>
+            </div>
+            <div class="top-header-center">
+                <div class="top-header-center-alert-left">
+                    <h3>免费送货</h3>
+                </div>
+                <div class="top-header-center-alert-right">
+                    <div class="vticker">
+                        <ul>
+                            <li>适用于50美元或以上的订单。 <label>回报总是免费的.</label></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="top-header-right">
+                <ul style="margin-top: 3px">
+                    <li><a href="../../user/getUserMsg">个人中心</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="../../order/orderList">已购商品</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="javaScript:void(0)">登录</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a th:href="@{../mall/toRegister}">注册</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a th:href="@{../../user/logout.do}">登出</a></li>
+                    <li><a href="javaScript:void(0)"></a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li>
+                        <a href="javaScript:void(0)">
+                            <shiro:principal property="name"/>
+                        </a>
+                    </li>
+                    <li>
+                        <div id="userHeadImgg" style="position: relative;top:-6px">
+                    </li>
+                </ul>
+
+            </div>
+
+
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!----start-mid-head---->
+<div class="mid-header">
+    <div class="wrap">
+        <div class="mid-grid-left">
+            <form>
+                <input type="text" placeholder="What Are You Looking for?"/>
+            </form>
+            <br>
+            <h2>
+                <img th:src="@{/images/cart.jpg}" width="60px" style="vertical-align: middle;margin-bottom: 0px"/>
+                <span style="font-size: larger">SHOPPING</span></h2>
+        </div>
+        <div class="mid-grid-right">
+            <a class="logo" href="javaScript:void(0)"><span> </span></a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!----//End-mid-head---->
+<!----start-bottom-header---->
+<!--=================主体====================================================================================-->
+
+<div class="content" style="background-color: #ebebeb;padding: 10px 20px 10px 20px">
+    <div class="layui-row ">
+        <div class="layui-col-md2">
+            <div class="left_slide"
+                 style="background-color: white;width:200px;height: 500px;padding-left: 50px;padding-top: 30px">
+                <div class="left_title"><font size="4px">个人中心</font></div>
+                <ul>
+                    <li><a class="left_tab" th:href="@{/order/orderList}">我的订单</a></li>
+                    <li>
+                        <del><a class="left_tab" href="javascript:;">浏览历史</a></del>
+                    </li>
+                </ul>
+                <div class="left_title"><font size="4px">客户服务</font></div>
+                <ul>
+                    <li>
+                        <a class="left_tab" href="/order/returnOrderList">退货/退款</a>
+                    </li>
+                    <li>
+                        <del><a class="left_tab" href="javascript:;">取消订单记录</a></del>
+                    </li>
+                </ul>
+
+                <div class="left_title"><font size="4px">账户中心</font></div>
+                <ul>
+                    <li><a class="left_tab active" href="/user/getUserMsg" >账户信息</a></li>
+                    <li><a class="left_tab" href="/user/UserAddress" >收货地址</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-col-md10" style="width: 83%; ">
+            <div id="u">
+                <!--用户信息-->
+                <div class="layui-row" id="user_tab">
+                    <div class="layui-col-md3">
+                        <div id="u_left">
+                            <div>
+                                <ul>
+                                    <li id="img1"></li>
+                                    <li>
+                                        <h3 th:text="${user.name}"></h3>
+                                        <br>
+                                        <a href="javascript:;">资料设置</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="userMsg" class="layui-col-md9">
+                        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">基本信息</li>
+                                <li>个人头像</li>
+                                <li>密码设置</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show userformdiv">
+                                    <form class="layui-form" action="" id="userForm">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">用户类型</label>
+                                            <div class="layui-input-block">
+                                                <span style="color: gray;position: relative;top:8px;font-size: 13px">普通用户</span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">姓 名</label>
+                                            <div class="layui-input-block">
+                                                <input readonly="readonly" th:value="${user.name}"
+                                                       type="text" name="name"
+                                                       required lay-verify="required"
+                                                       placeholder="姓名" autocomplete="off" class="layui-input">
+                                                <i class="iStr"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">邮 箱</label>
+                                            <div class="layui-input-block">
+                                                <input readonly="readonly" th:value="${user.email}"
+                                                       type="text" name="email"
+                                                       required lay-verify="required"
+                                                       placeholder="邮箱" autocomplete="off" class="layui-input">
+                                                <i class="iStr"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label">电 话</label>
+                                            <div class="layui-input-block">
+                                                <input id="userTel" th:value="${user.tel}" name="tel"
+                                                       placeholder="电话"
+                                                       autocomplete="off" class="layui-input"
+                                                       required lay-verify="required"/>
+                                                <i class="iStr" style="color: red" id="teltxt"></i>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item" id="sexs">
+                                            <span th:text="${user.sex}" hidden="hidden"></span>
+                                            <label class="layui-form-label">性 别</label>
+                                            <input class="sex" id="sex1" type="radio" name="sex" th:field="${user.sex}"
+                                                   value="男"
+                                                   title="男">
+                                            <label for="sex1">男</label>
+                                            <input class="sex" id="sex" type="radio" name="sex" th:field="${user.sex}"
+                                                   value="女"
+                                                   title="女">
+                                            <label for="sex">女</label>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <input id="userSubmit" style="width: 100px;" class="layui-btn"
+                                                       lay-submit
+                                                       lay-filter="formDemo" value="立即提交"/>
+                                                <!--<input type="reset" class="layui-btn layui-btn-primary" value="重置"/>-->
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <!--更改主图片-->
+                                    <div id="updateMainImg">
+
+                                        <form id="updateMainImgForm" enctype="multipart/form-data">
+                                            <input id="imgMain" hidden="hidden" name="file" type="file"
+                                                   onchange="updateMainImg(event)">
+                                        </form>
+                                        <button class="layui-btn" onclick="$('input[id=imgMain]').click();"
+                                                style="background-color: #e2e2e2;color: black">
+                                            <i class="layui-icon">&#xe67c;</i>
+                                            <span>选择要更换的图片</span>
+                                        </button>
+                                        <button id="updateImgMainBtn"
+                                                class="layui-btn">
+                                            点击上传
+                                        </button>
+                                        <div class="layui-row layui-col-space10">
+                                            <div class="layui-col-md5">
+                                                <div id="mainDa"></div>
+                                            </div>
+                                            <div class="layui-col-md4">
+                                                <div id="mainSmtiptop">*请注意图片的清晰度*</div>
+                                                <div id="mainSm"></div>
+                                                <div id="mainSmtip">中尺寸图片（200*200）</div>
+                                            </div>
+                                            <div class="layui-col-md2" style="text-align: center">
+                                                <div id="mainSsm"></div>
+                                                <div id="mianSsmTip">小尺寸头像（150*150）</div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="layui-tab-item">
+                                    <div style="width: 500px">
+                                        <form class="layui-form" id="updatePasswordForm" name="updatePasswordForm">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">旧密码</label>
+                                                <div class="layui-input-block">
+                                                    <input type="password" name="oldP" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">新密码</label>
+                                                <div class="layui-input-block">
+                                                    <input type="password" name="newsP" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">新密码确认</label>
+                                                <div class="layui-input-block">
+                                                    <input type="password" name="password" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block">
+                                                    <input class="layui-btn" lay-filter="formDemo" value="立即提交">
+                                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['element','layer'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+    });
+    /*上传用户头像图片回显*/
+    function updateMainImg(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function () {
+            if (checkIsIMg(event)) {
+                var dataURL = reader.result;
+                $("#userHeadImgg").html("<img style='border-radius: 100px;border:1px solid white;position: relative;top:3px' width='25' height='25' src=" + dataURL + ">");
+                $("#img1").html("<img width='150' height='150' src=" + dataURL + ">");
+                $("#mainDa").html("<img width='250' height='250' src=" + dataURL + ">");
+                $("#mainSm").html("<img width='200' height='200' src=" + dataURL + ">");
+                $("#mainSsm").html("<img  style='border-radius: 100px' width='150' height='150' src=" + dataURL + ">");
+            } else {
+                layui.use(['layer'], function () {
+                    var layer = layui.layer;
+                    layer.alert("图片格式不对!")
+                });
+            }
+        };
+    };
+
+    function checkIsIMg(event) {
+        var filepath = event.target.value;
+        var extStart = filepath.lastIndexOf(".");
+        var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+        if (ext != ".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG") {
+            return false;
+        }
+        return true;
+    }
+</script>
+
+
+
+<!---- start-bottom-grids---->
+<div class="bottom-grids">
+    <div class="bottom-top-grids">
+        <div class="wrap">
+            <div class="bottom-top-grid">
+                <h4>GET HELP</h4>
+                <ul>
+                    <li><a th:href="@{toContact}">Contact us</a></li>
+                    <li><a href="#">Shopping</a></li>
+                    <li><a href="#">NIKEiD</a></li>
+                    <li><a href="#">Nike+</a></li>
+                </ul>
+            </div>
+            <div class="bottom-top-grid">
+                <h4>ORDERS</h4>
+                <ul>
+                    <li><a href="#">Payment options</a></li>
+                    <li><a href="#">Shipping and delivery</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="bottom-top-grid last-bottom-top-grid">
+                <h4>REGISTER</h4>
+                <p>Create one account to manage everything you do with Nike, from your shopping preferences to your
+                    Nike+ activity.</p>
+                <a class="learn-more" href="#">Learn more</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="bottom-bottom-grids">
+        <div class="wrap">
+            <div class="bottom-bottom-grid">
+                <h6>EMAIL SIGN UP</h6>
+                <p>Be the first to know about new products and special offers.</p>
+                <a class="learn-more" href="#">Sign up now</a>
+            </div>
+            <div class="bottom-bottom-grid">
+                <h6>GIFT CARDS</h6>
+                <p>Give the gift that always fits.</p>
+                <a class="learn-more" href="#">View cards</a>
+            </div>
+            <div class="bottom-bottom-grid last-bottom-bottom-grid">
+                <h6>STORES NEAR YOU</h6>
+                <p>Locate a Nike retail store or authorized retailer.</p>
+                <a class="learn-more" href="#">Search</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!---- //End-bottom-grids---->
+<!--- //End-content---->
+<!---start-footer---->
+<div class="footer">
+    <div class="wrap">
+        <div class="footer-left">
+            <ul>
+                <li><a href="#">United Kingdom</a> <span> </span></li>
+                <li><a href="#">Terms of Use</a> <span> </span></li>
+                <li><a href="#">Nike Inc.</a> <span> </span></li>
+                <li><a href="#">Launch Calendar</a> <span> </span></li>
+                <li><a href="#">Privacy & Cookie Policy</a> <span> </span></li>
+                <li><a href="#">Cookie Settings</a></li>
+                <div class="clear"></div>
+            </ul>
+        </div>
+        <div class="footer-right">
+            <p>More Templates <a href="http://www.cssmoban.com/" target="_blank" title="ģ��֮��">ģ��֮��</a></p>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    /*
+                    var defaults = {
+                          containerID: 'toTop', // fading element id
+                        containerHoverID: 'toTopHover', // fading element hover id
+                        scrollSpeed: 1200,
+                        easingType: 'linear'
+                     };
+                    */
+
+                    //$().UItoTop({easingType: 'easeOutQuart'});
+
+                });
+            </script>
+            <a href="#" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 1;"> </span></a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+</body>
+</html>
+

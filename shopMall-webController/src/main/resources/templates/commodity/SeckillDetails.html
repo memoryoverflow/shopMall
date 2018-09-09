@@ -1,0 +1,876 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:c="http://java.sun.com/jsp/jstl/core" prefix="c">
+<head>
+    <title>秒杀页面</title>
+
+
+    <!--<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css"></script>-->
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/carts.css}">
+    <!--layui-->
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script th:src="@{/layui/layui.js}"></script>
+
+    <script src="/js/jquery.min.js"></script>
+    <!--<script src="/js/details.js"></script>-->
+    <script th:src="@{/js/jquery.cookie.js}"></script>
+    <script src="/js/seckiil.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.countdown/2.2.0/jquery.countdown.js"></script>
+
+    <!--省事联动-->
+    <link rel="stylesheet" th:href="@{/sanjiliandong/css/pick-pcc.min.1.0.1.css}">
+    <script type="text/javascript" th:src="@{/sanjiliandong/js/pick-pcc.min.1.0.1.js}"></script>
+
+<!--不要动-->
+    <link href="/css/style.css" rel='stylesheet' type='text/css'/>
+    <link href="/css/detail.css" rel='stylesheet' type='text/css'/>
+    <link href="/css/lunBocss.css" rel='stylesheet' type='text/css'/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <script type="text/javascript" src="/js/jquery.easy-ticker.js"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
+    <script type="text/javascript" src="/js/jquery.elevatezoom.js"></script>
+    <link href = "/css/megamenu.css"rel = "stylesheet" type = "text/css"media = "all" / >
+    <script  type = "text/javascript"src = "/js/megamenu.js" ></script>
+    <script type="application/x-javascript">
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        } </script>
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".megamenu").megamenu();
+        });
+        $(document).ready(function () {
+            $('#demo').hide();
+            $('.vticker').easyTicker();
+        });
+    </script>
+    <script src="/js/menu_jquery.js"></script>
+    <script type="text/javascript" src="/js/move-top.js"></script>
+    <script type="text/javascript" src="/js/easing.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1200);
+            });
+        });
+    </script>
+    <link href="/css/owl.carousel.css" rel="stylesheet">
+    <script src="/js/owl.carousel.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("#owl-demo").owlCarousel({
+                items: 3,
+                lazyLoad: true,
+                autoPlay: true,
+                navigation: true,
+                navigationText: ["", ""],
+                rewindNav: false,
+                scrollPerPage: false,
+                pagination: false,
+                paginationNumbers: false,
+            });
+
+        });
+    </script>
+<!--不要动-->
+    <style>
+        .div {
+            padding-top: 35px;
+        }
+
+        select {
+            border: 1px solid #ebebeb;
+        }
+
+        input {
+            border: none;
+            background: none;
+        }
+    </style>
+
+</head>
+<body>
+<div class="header">
+    <div class="top-header">
+        <div class="wrap">
+            <div class="top-header-left">
+                <ul>
+                    <!---cart-tonggle-script---->
+                    <script type="text/javascript">
+                        $(function () {
+                            var $cart = $('#cart');
+                            $('#clickme').click(function (e) {
+                                e.stopPropagation();
+                                if ($cart.is(":hidden")) {
+                                    $cart.slideDown("slow");
+                                } else {
+                                    $cart.slideUp("slow");
+                                }
+                            });
+                            $(document.body).click(function () {
+                                if ($cart.not(":hidden")) {
+                                    $cart.slideUp("slow");
+                                }
+                            });
+                        });
+                    </script>
+                    <!---//cart-tonggle-script---->
+                    <li style="padding-right: 25px">
+                        <a href="../../mall/">
+                            <img style="position: relative;bottom:4px"  width="18px"src="/images/indexLogo.png"/>
+                        </a>
+                    </li>
+                    <li><a class="cart" href="#"><span id="clickme"> </span></a></li>
+                    <!---start-cart-bag---->
+                    <div id="cart">
+                        <span>
+                            <a id="Cart" style="color: white;font-size: 13px" th:href="@{../../shopCart/toShoipCart}">购物车是空的</a>
+                        </span>
+                        <span id="cart_num" class="badge"
+                              style="border-radius: 10px;background-color: red;padding: 3px 8px;color: white">0</span>
+                    </div>
+                    <!---start-cart-bag---->
+                    <li><a class="info" href="#"><span> </span></a></li>
+                </ul>
+            </div>
+            <div class="top-header-center">
+                <div class="top-header-center-alert-left">
+                    <h3>免费送货</h3>
+                </div>
+                <div class="top-header-center-alert-right">
+                    <div class="vticker">
+                        <ul>
+                            <li>适用于50美元或以上的订单。 <label>回报总是免费的.</label></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="top-header-right">
+                <ul style="margin-top: -10px">
+                    <li><a href="../../user/getUserMsg">个人中心</a><i style="color: white;font-size: 13px"> | </i></li>
+                    <li><a href="../../order/orderList">已购商品</a><i style="color: white;font-size: 13px"> | </i></li>
+
+                    <li><a th:href="@{../../mall/toLogin}">登录</a><i style="color: white;font-size: 10px"> | </i></li>
+                    <li><a th:href="@{../../mall/toRegister}">注册</a><i style="color: white;font-size: 10px"> | </i></li>
+                    <li><a th:href="@{../../mall/logout.do}">登出</a></li>
+                    <li><a href="javaScript:void(0)"></a><i style="color: white;font-size: 10px"> | </i></li>
+                    <li><a href="javaScript:void(0)">
+                        <shiro:principal property="name"/>
+                    </a></li>
+                    <li>
+                        <div id="userHeadImgg" style="position: relative;top:8px"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="mid-header">
+        <div class="wrap">
+            <div class="mid-grid-left">
+                <form>
+                    <input type="text" placeholder="What Are You Looking for?"/>
+                </form>
+            </div>
+            <div class="mid-grid-right">
+                <a class="logo" href="javaScript:void(0)"><span> </span></a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="header-bottom">
+        <div class="wrap">
+            <!-- start header menu -->
+            <ul class="megamenu skyblue">
+                <li class="grid"><a class="color2" href="#">男人</a>
+                    <!--<div class="megapanel">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>popular</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">login</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4 class="top">man</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>style zone</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>style zone</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1 men">-->
+                                <!--<div class="men-pic">-->
+                                    <!--<img src="/images/men.png" title=""/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </li>
+                <li class="active grid"><a class="color4" href="#">女人</a>
+                    <!--<div class="megapanel">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>shop</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>help</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">trends</a></li>-->
+                                        <!--<li><a href="#">sale</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>my company</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">trends</a></li>-->
+                                        <!--<li><a href="#">sale</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>account</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">login</a></li>-->
+                                        <!--<li><a href="#">create an account</a></li>-->
+                                        <!--<li><a href="#">create wishlist</a></li>-->
+                                        <!--<li><a href="#">my shopping bag</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                        <!--<li><a href="#">create wishlist</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>my company</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">trends</a></li>-->
+                                        <!--<li><a href="#">sale</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>popular</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1 women">-->
+                                <!--<div class="women-pic">-->
+                                    <!--<img src="/images/women.png" title=""/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="row">-->
+                            <!--<div class="col2"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </li>
+                <li><a class="color5" href="#">孩子</a>
+                    <!--<div class="megapanel">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>popular</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">login</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4 class="top">man</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>style zone</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1 kids">-->
+                                <!--<div class="kids-pic">-->
+                                    <!--<img src="/images/kids1.png" title=""/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </li>
+                <li><a class="color6" href="#">运动</a>
+                    <!--<div class="megapanel">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>shop</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4 class="top">my company</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">trends</a></li>-->
+                                        <!--<li><a href="#">sale</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>man</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>help</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">trends</a></li>-->
+                                        <!--<li><a href="#">sale</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1 sports">-->
+                                <!--<div class="sports-pic">-->
+                                    <!--<img src="/images/sport.png" title=""/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="row">-->
+                            <!--<div class="col2"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </li>
+                <li><a class="color7" href="#">耐克运动服</a>
+                    <!--<div class="megapanel">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>shop</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>my company</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">trends</a></li>-->
+                                        <!--<li><a href="#">sale</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>help</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">trends</a></li>-->
+                                        <!--<li><a href="#">sale</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>my company</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">trends</a></li>-->
+                                        <!--<li><a href="#">sale</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>account</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">login</a></li>-->
+                                        <!--<li><a href="#">create an account</a></li>-->
+                                        <!--<li><a href="#">create wishlist</a></li>-->
+                                        <!--<li><a href="#">my shopping bag</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                        <!--<li><a href="#">create wishlist</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1 nike">-->
+                                <!--<div class="nike-pic">-->
+                                    <!--<img src="/images/nike.png" title=""/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="row">-->
+                            <!--<div class="col2"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                            <!--<div class="col1"></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </li>
+                <li><a class="color8" href="#">尼基德</a>
+                    <!--<div class="megapanel">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>style zone</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">women</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">brands</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col1">-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4>popular</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">men</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">login</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--<div class="h_nav">-->
+                                    <!--<h4 class="top">man</h4>-->
+                                    <!--<ul>-->
+                                        <!--<li><a href="#">new arrivals</a></li>-->
+                                        <!--<li><a href="#">accessories</a></li>-->
+                                        <!--<li><a href="#">kids</a></li>-->
+                                        <!--<li><a href="#">style videos</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--<div class="col1"></div>-->
+                                <!--<div class="col1"></div>-->
+                                <!--<div class="col1"></div>-->
+                                <!--<div class="col1"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<!---内容---->
+<div class="content details-page">
+    <div class="product-details">
+        <div class="wrap">
+            <ul class="product-head">
+                <li><a href="#">Home</a> <span>::</span></li>
+                <li class="active-page"><a href="#">Product Page</a></li>
+                <li class="active-page">
+                    <a href="Javascript:;">
+                    &nbsp;&nbsp;&nbsp; *温馨提示:抢购前 请先选好商品属性和<span id="ad">&nbsp;[收货地址]</span>&nbsp;
+                    避免每次刷新页面都需要选择属性而错失抢购时间
+                    <i class="layui-icon layui-icon-face-smile" style="font-size: 25px; color: #E45D5D;"></i>
+                    </a>
+                </li>
+                <div class="clear"></div>
+            </ul>
+            <!--<div class="layui-container">-->
+            <form id="orderForm">
+                <!--产品Id,产品img，产品name,产品收货address_Id-->
+                <input type="hidden" th:value="${product.product.productId}" name="userProducts[0].up_productId"/>
+                <input type="hidden" th:value="${product.product.imgMain}" name="userProducts[0].up_img"/>
+                <input type="hidden" th:value="${product.product.name}" name="userProducts[0].up_name"/>
+                <input type="hidden" name="address_Id"/>
+                <input type="hidden" name="totalPrice" th:value="${product.product.price}"/>
+                <div class="layui-card" style="border: 1px solid #ebebeb ">
+                    <div class="layui-card-header" style="height:100px; text-align:center;background-color: #f0f0f0">
+                        <sapn><img style="position:relative;top:25px;vertical-alian:middle;" height="30px" src="/images/goo.gif"></sapn>
+                        <span style="position:relative;top:20px;color:red;font-size: 20px">
+                            仅需
+                            <span style="color: red;font-size: 35px">&nbsp;<text th:text="${product.product.price}"></text>&nbsp;</span>
+                            <del style="color: red;font-size: 20px">不需&nbsp;1998</del>
+                        </span>
+                        <!--放收货地址-->
+                        <div  style="margin-right: 20px;margin-top: 10px;text-align: left">
+                            <span id="addAddressText" style="color: black;font-size: 13px;font-weight: bolder"></span>
+                        </div>
+                    </div>
+
+                    <div class="layui-card-body" style="background-color: white">
+                        <div class="layui-row" style="border: 1px solid #ebebeb">
+                            <div class="layui-col-md2">
+                                <a th:href="@{'../../mall/toDetails/'+${product.product.productId}}">
+                                    <img width="120" th:src="${product.product.imgMain}">
+                                </a>
+                            </div>
+                            <div class="layui-col-md2 div">
+                                <a th:href="@{'../../mall/toDetails/'+${product.product.productId}}">
+                                    <span th:text="${product.product.name}"></span>
+                                </a>
+                            </div>
+                            <div class="layui-col-md2" style="padding-top: 25px">
+                            <span>
+                            <p style="margin-left: 30px">
+                            <i style="color: gray">大小：</i>
+                            <!--2.大小-->
+                            <select style="color: gray" lay-verify="required" name="userProducts[0].up_size">
+                                <option th:each="size,sizeStat:${product.product.productSizeList}"
+                                        th:value="${size.size}">
+                                   <span th:text="${size.size}"></span>
+                                </option>
+                             </select>
+                                </p>
+                            <p style="margin-left: 30px">
+                            <i style="color: gray">颜色：</i>
+                            <select style="color: gray" lay-verify="required" name="userProducts[0].up_color">
+                                <option th:each="color,colorStat:${product.product.colorList}"
+                                        th:value="${color.color}">
+                                   <span th:text="${color.color}"></span>
+                                </option>
+                            </select>
+                            </p>
+                            </span>
+                            </div>
+                            <div class="layui-col-md2 div">
+                                <span style="color: red;font-size: 20px">¥</span>
+                                <input readonly="readonly" style="width: 60px;color: red;font-size: 18px" type="text"
+                                       th:value="${product.product.price}" name="userProducts[0].up_totalprice"/>
+                                <input hidden="hidden" type="text" th:value="${product.product.price}" name="userProducts[0].up_price"/>
+                            </div>
+                            <div class="layui-col-md2 div">
+                                <input readonly="readonly" style="width: 6px;" type="text" value="1"
+                                       name="userProducts[0].up_num"/>
+                                <span>双</span>
+                            </div>
+                            <div class="layui-col-md2" style="margin-top: 20px">
+                                <!--开始时间-->
+                                <span style="color: gray;">开始时间：</span>
+                                <p style="color: gray" id="startTime"
+                                   th:text="${#dates.format(product.kill_startTime,'yyyy-MM-dd HH:mm:ss')}"></p>
+
+                                <span style="color: gray;">结束时间：</span>
+                                <p style="color: gray" id="endTime"
+                                   th:text="${#dates.format(product.kill_endTime,'yyyy-MM-dd HH:mm:ss')}"></p>
+                            </div>
+
+                        </div>
+                        <div class="layui-col-md12" align="center" style="margin: 35px auto">
+                            <!--显示图标-->
+                            <p>
+                                <i class="layui-icon layui-icon-log"
+                                   style="font-size: 40px;position:relative;top:5px;color:red;">
+                                </i>
+                                <span style="font-size: 30px;positionative;top:5px;color:red;"
+                                      id="seckillStatus"></span>
+                            </p><br>
+                            <!--展示倒计时-->
+                            <span class="glyphicon" style="font-size: 30px; color:red;" id="seckill_box"></span>
+                        </div>
+                    </div>
+
+                    <!--</div>-->
+            </form>
+
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!---- start-bottom-grids---->
+    <div class="bottom-grids">
+        <div class="bottom-top-grids">
+            <div class="wrap">
+                <div class="bottom-top-grid">
+                    <h4>GET HELP</h4>
+                    <ul>
+                        <li><a th:href="@{/toContact}">Contact us</a></li>
+                        <li><a href="#">Shopping</a></li>
+                        <li><a href="#">NIKEiD</a></li>
+                        <li><a href="#">Nike+</a></li>
+                    </ul>
+                </div>
+                <div class="bottom-top-grid">
+                    <h4>ORDERS</h4>
+                    <ul>
+                        <li><a href="#">Payment options</a></li>
+                        <li><a href="#">Shipping and delivery</a></li>
+                        <li><a href="#">Returns</a></li>
+                    </ul>
+                </div>
+                <div class="bottom-top-grid last-bottom-top-grid">
+                    <h4>REGISTER</h4>
+                    <p>Create one account to manage everything you do with Nike, from your shopping preferences to your
+                        Nike+ activity.</p>
+                    <a class="learn-more" href="#">Learn more</a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="bottom-bottom-grids">
+            <div class="wrap">
+                <div class="bottom-bottom-grid">
+                    <h6>EMAIL SIGN UP</h6>
+                    <p>Be the first to know about new products and special offers.</p>
+                    <a class="learn-more" href="#">Sign up now</a>
+                </div>
+                <div class="bottom-bottom-grid">
+                    <h6>GIFT CARDS</h6>
+                    <p>Give the gift that always fits.</p>
+                    <a class="learn-more" href="#">View cards</a>
+                </div>
+                <div class="bottom-bottom-grid last-bottom-bottom-grid">
+                    <h6>STORES NEAR YOU</h6>
+                    <p>Locate a Nike retail store or authorized retailer.</p>
+                    <a class="learn-more" href="#">Search</a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="wrap">
+            <div class="footer-left">
+                <ul>
+                    <li><a href="#">United Kingdom</a> <span> </span></li>
+                    <li><a href="#">Terms of Use</a> <span> </span></li>
+                    <li><a href="#">Nike Inc.</a> <span> </span></li>
+                    <li><a href="#">Launch Calendar</a> <span> </span></li>
+                    <li><a href="#">Privacy & Cookie Policy</a> <span> </span></li>
+                    <li><a href="#">Cookie Settings</a></li>
+                    <div class="clear"></div>
+                </ul>
+            </div>
+            <div class="footer-right">
+                <p>More Templates <a href="http://www.cssmoban.com/" target="_blank" title="ģ��֮��">ģ��֮��</a></p>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        /*
+                        var defaults = {
+                              containerID: 'toTop', // fading element id
+                            containerHoverID: 'toTopHover', // fading element hover id
+                            scrollSpeed: 1200,
+                            easingType: 'linear'
+                         };
+                        */
+
+                        $().UItoTop({easingType: 'easeOutQuart'});
+
+                    });
+                </script>
+                <a href="#" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 1;"> </span></a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+    <!--//==========地址=========================-->
+    <!--选择地址模块-->
+    <div id="detail" class="layui-container" style="display:none;width: 95%">
+        <br>
+        <b>选择收货地址：</b>
+        <a id="submit_order" style="float: right;color:orangered;margin-right: 10px" href="javascript:;">
+            √ 确定已选
+        </a>
+        <hr class="layui-bg-orange">
+        <span hidden="hidden" id="uId"><shiro:principal property="uId"/></span>
+        <ul s id="userMsgUL" style="list-style: none;overflow-y: scroll;height: 380px"></ul>
+
+        <a style="float: right;font-size: 18px" id="addAddress_btn" href="javascript:;">新增收货地址：</a>
+        <hr class="layui-bg-orange">
+    </div>
+    <!--新增地址模块-->
+    <div id="addAdds_Div" class="layui-container" style="display:none;width: 95%">
+        <fieldset>
+            <legend><a style="float: left;font-size: 18px" id="addAddress_btn" href="javascript:;">新增收货地址：</a></legend>
+            <hr class="layui-bg-orange">
+            <div id="div_Address">
+                <div class="a">
+                    <label class="control-label range">*请选择区域：</label>
+                    <label class="control-label range2">*请把地址补全：</label>
+                    <a href="javascript:void(0)" class="pick-area pick-area4" name="新疆维吾尔自治区/博尔塔拉蒙古自治州"></a>
+                    <input name="address" class="isEmpty" id="address" placeholder="已选值会出现在此"/>
+                    <form>
+                        <label class="range" for="firstname">*收件人：</label>
+                        <input class="inPu isEmpty" type="text" name="recUser"
+                               placeholder="请输入名字">
+                        <br>
+                        <label class="range" for="lastname">*电话：</label>
+                        <input class="inPu isEmpty" type="text" name="recTel"
+                               placeholder="请输入姓">
+                        <br>
+                        <br>
+                        <input type="button" id="btn_addAddress" class="layui-btn" value="添加"/>
+                        <input type="reset" class="layui-btn" value="重置"/>
+
+                    </form>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+
+    <!--三级联动插件-->
+    <script type="text/javascript">
+
+        $(".pick-area4").pickArea({
+            "format": "province/city/county", //格式
+            "width": "420",//设置“省市县”文本边框的宽度
+            "height": "48",//设置“省市县”文本边框的高度
+            "borderColor": "#435abd",//设置“省市县”文本边框的色值
+            "arrowColor": "#435abd",//设置下拉箭头颜色
+            "listBdColor": "#435abd",//设置下拉框父元素ul的border色值
+            "color": "#435abd",//设置“省市县”字体颜色
+            "fontSize": "20px",//设置字体大小
+            "hoverColor": "#435abd",
+            "paddingLeft": "30px",//设置“省”位置处的span相较于边框的距离
+            "arrowRight": "30px",//设置下拉箭头距离边框右侧的距离
+            "maxHeight": "300px",
+            //"preSet":"",//数据初始化 ；这里的数据初始化有两种方式，第一种是用preSet属性设置，第二种是在a标签里使用name属性设置
+            "getVal": function () {//这个方法是每次选中一个省、市或者县之后，执行的方法
+                //console.log($(".pick-area-hidden").val())
+                //console.log($(".pick-area-dom").val())
+                var thisdom = $("." + $(".pick-area-dom").val());//返回的是调用这个插件的元素pick-area，$(".pick-area-dom").val()的值是该元素的另一个class名，这个class名在dom结构中是唯一的，不会有重复，可以通过这个class名来识别这个pick-area
+                thisdom.next().val($(".pick-area-hidden").val());//$(".pick-area-hidden").val()是页面中隐藏域的值，存放着每次选中一个省、市或者县的时候，当前文本存放的省市县的最新值，每点击一次下拉框里的li，这个值就会立即更新
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+

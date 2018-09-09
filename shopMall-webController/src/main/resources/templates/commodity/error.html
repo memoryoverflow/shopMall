@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/jquery.min.js"></script>
+    <style>
+        div {
+            border-style: dashed;
+            border-color: #e4e4e4;
+            line-height: 30px;
+            background: url(sorry.png) no-repeat right;
+            height: 280px;
+            width: 850px;
+            margin: 70px auto;
+            padding-left: 30px;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        h1, h3 {
+            color: #1E9FFF;
+            line-height: 15px;
+        }
+
+        p {
+            margin-top: 50px;
+            color:#666666;
+        }
+    </style>
+    <script type="text/javascript">
+        function countDown(secs, surl) {
+            var jumpTo = document.getElementById('jumpTo');
+            jumpTo.innerHTML = secs;
+            if (--secs > 0) {
+                setTimeout("countDown(" + secs + ",'" + surl + "')", 1000);
+            }
+            else {
+                location.href = surl;
+            }
+        }
+    </script>
+</head>
+<body>
+<!--<h3 th:text="${url}">出错</h3>
+<h3 th:text="${exception}">出错</h3>-->
+
+<div>
+    <h1>抱歉，系统出现异常~</h1>
+    <h3>Sorry, the system is abnormal</h3>
+    <font color="#666666">抱歉，系统出现了异常，麻烦您联系管理员反馈信息，以便恢复使用。谢谢！ 管理员邮箱（1375668614@qq.com）</font>
+    <th2 th:text="${exception}"></th2>
+    <p align="center"><span id="jumpTo"></span>秒后即将跳转到 http://106.14.226.138/(商城首页)</p>
+    <script type="text/javascript">
+        countDown(5, 'http://106.14.226.138/');
+    </script>
+</div>
+
+
+</body>
+</html>
