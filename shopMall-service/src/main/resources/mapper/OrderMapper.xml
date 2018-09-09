@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.shopmall.mapper.OrderMapper">
+
+    <!--前台用户查询订单列表级-->
+    <select id="findOrder" parameterType="Order" resultMap="Orders">
+        SELECT
+        *
+        FROM
+        tb_order o,
+        tb_useraddress uad,
+        tb_userproduct up
+        WHERE
+        up.up_order_id=o.orderId
+        AND
+        o.userId=up.up_userId
+        AND
+        uad.addressId=o.address_Id
+        AND o.isdel=0
+        AND up.isdel=0
+        <if test="userId!=null and userId!=''">
+            AND o.userId =#{userId}
+        </if>
+        <if test="orderId!=null and orderId!=''">
+            AND o.orderId LIKE concat('%',#{orderId},'%')
+        </if>
+
+        <if test="startTime!=null">
+            and #{startTime} &lt;= o.createTime
+        </if>
+        <if test="endTime!=null">
+            and #{endTime} &gt;= o.createTime
+        </if>
+
+        <if test="isPayfor!=null and isPayfor !=''">
+            and o.isPayfor=#{isPayfor}
+        </if>
+        AND o.isPayfor &lt; 4
+    </select>
+    <resultMap id="Orders" type="Order">
+        <id property="orderId" column="orderId"/>
+        <result column="createTime" property="createTime"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="address_Id" property="address_Id"/>
+        <result column="isPayfor" property="isPayfor"/>
+        <result column="userId" property="userId"/>
+        <association property="address" javaType="Address">
+            <id column="addressId" property="addressId"/>
+            <result column="user_id" property="user_id"/>
+            <result column="address" property="address"/>
+            <result column="recUser" property="recUser"/>
+            <result column="recTel" property="recTel"/>
+        </association>
+        <collection property="userProducts" ofType="UserProduct">
+            <result column="up_productId" property="up_productId"/>
+            <result column="up_userId" property="up_userId"/>
+            <result column="up_price" property="up_price"/>
+            <result column="up_num" property="up_num"/>
+            <result column="up_img" property="up_img"/>
+            <result column="up_totalprice" property="up_totalprice"/>
+            <result column="up_color" property="up_color"/>
+            <result column="up_name" property="up_name"/>
+            <result column="up_size" property="up_size"/>
+        </collection>
+    </resultMap>
+
+    <!--前台用户查询退货订单列表级-->
+    <select id="findReturnOrder" parameterType="Order" resultMap="ReturnOrders">
+        SELECT
+        *
+        FROM
+        tb_order o,
+        tb_useraddress uad,
+        tb_userproduct up,
+        t_return r
+        WHERE
+        up.up_order_id=o.orderId
+        AND
+        o.userId=up.up_userId
+        AND
+        uad.addressId=o.address_Id
+        AND
+        r.return_oId=o.orderId
+        AND o.isdel=0
+        AND up.isdel=0
+        <if test="userId!=null and userId!=''">
+            AND o.userId =#{userId}
+        </if>
+        <if test="orderId!=null and orderId!=''">
+            AND o.orderId LIKE concat('%',#{orderId},'%')
+        </if>
+
+        <if test="startTime!=null">
+            and #{startTime} &lt;= o.createTime
+        </if>
+        <if test="endTime!=null">
+            and #{endTime} &gt;= o.createTime
+        </if>
+
+        <if test="isPayfor!=null and isPayfor !=''">
+            and o.isPayfor=#{isPayfor}
+        </if>
+        AND o.isPayfor &gt; 3
+    </select>
+    <resultMap id="ReturnOrders" type="Order">
+        <id property="orderId" column="orderId"/>
+        <result column="createTime" property="createTime"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="address_Id" property="address_Id"/>
+        <result column="isPayfor" property="isPayfor"/>
+        <result column="userId" property="userId"/>
+        <association property="address" javaType="Address">
+            <id column="addressId" property="addressId"/>
+            <result column="user_id" property="user_id"/>
+            <result column="address" property="address"/>
+            <result column="recUser" property="recUser"/>
+            <result column="recTel" property="recTel"/>
+        </association>
+        <association property="returnGoods" javaType="ReturnGoods">
+            <id column="id" property="id"/>
+            <result column="return_oId" property="return_oId"/>
+            <result column="reason" property="reason"/>
+            <result column="remark" property="remark"/>
+            <result column="returnTime" property="returnTime"/>
+            <result column="img1" property="img1"/>
+            <result column="img2" property="img2"/>
+            <result column="img3" property="img3"/>
+            <result column="returnContent" property="returnContent"/>
+            <result column="return_status" property="return_status"/>
+        </association>
+        <collection property="userProducts" ofType="UserProduct">
+            <result column="up_productId" property="up_productId"/>
+            <result column="up_userId" property="up_userId"/>
+            <result column="up_price" property="up_price"/>
+            <result column="up_num" property="up_num"/>
+            <result column="up_img" property="up_img"/>
+            <result column="up_totalprice" property="up_totalprice"/>
+            <result column="up_color" property="up_color"/>
+            <result column="up_name" property="up_name"/>
+            <result column="up_size" property="up_size"/>
+        </collection>
+    </resultMap>
+
+
+    <!--后台查询订单列表级-->
+    <select id="findOrderAdmin" parameterType="Order" resultMap="OrderAdmin"  >
+        SELECT
+        *
+        FROM
+        tb_order o,
+        tb_useraddress uad,
+        tb_userproduct up
+        WHERE
+        up.up_order_id=o.orderId
+        AND
+        o.userId=up.up_userId
+        AND
+        uad.addressId=o.address_Id
+        AND o.isdel=0
+        AND up.isdel=0
+        <if test="userId!=null and userId!=''">
+            AND o.userId =#{userId}
+        </if>
+        <if test="orderId!=null and orderId!=''">
+            AND o.orderId LIKE concat('%',#{orderId},'%')
+        </if>
+
+        <if test="startTime!=null">
+            and #{startTime} &lt;= o.createTime
+        </if>
+        <if test="endTime!=null">
+            and #{endTime} &gt;= o.createTime
+        </if>
+
+        <if test="isPayfor!=null and isPayfor !=''">
+            and o.isPayfor=#{isPayfor}
+        </if>
+        ORDER by createTime desc
+        limit #{page},#{limit}
+    </select>
+    <resultMap id="OrderAdmin" type="Order">
+        <id property="orderId" column="orderId"/>
+        <result column="createTime" property="createTime"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="address_Id" property="address_Id"/>
+        <result column="isPayfor" property="isPayfor"/>
+        <result column="userId" property="userId"/>
+        <association property="address" javaType="Address">
+            <id column="addressId" property="addressId"/>
+            <result column="user_id" property="user_id"/>
+            <result column="address" property="address"/>
+            <result column="recUser" property="recUser"/>
+            <result column="recTel" property="recTel"/>
+        </association>
+        <collection property="userProducts" ofType="UserProduct">
+            <result column="up_productId" property="up_productId"/>
+            <result column="up_userId" property="up_userId"/>
+            <result column="up_price" property="up_price"/>
+            <result column="up_num" property="up_num"/>
+            <result column="up_img" property="up_img"/>
+            <result column="up_totalprice" property="up_totalprice"/>
+            <result column="up_color" property="up_color"/>
+            <result column="up_name" property="up_name"/>
+            <result column="up_size" property="up_size"/>
+        </collection>
+    </resultMap>
+
+    <!--获取总条数-->
+    <select id="findOrderCount" parameterType="Order" resultType="Integer">
+        SELECT
+           COUNT(*)
+        FROM
+        (
+        SELECT COUNT(*)
+        FROM
+        tb_order o,
+        tb_useraddress uad,
+        tb_userproduct up
+        WHERE
+        up.up_order_id=o.orderId
+        AND
+        o.userId=up.up_userId
+        AND
+        uad.addressId=o.address_Id
+        <if test="userId!=null and userId!=''">
+            AND o.userId =#{userId}
+        </if>
+        <if test="orderId!=null and orderId!=''">
+            AND o.orderId LIKE concat('%',#{orderId},'%')
+        </if>
+
+        <if test="startTime!=null">
+            and #{startTime} &lt;= o.createTime
+        </if>
+        <if test="endTime!=null">
+            and #{endTime} &gt;= o.createTime
+        </if>
+
+        <if test="isPayfor!=null and isPayfor !=''">
+            and o.isPayfor=#{isPayfor}
+        </if>
+
+        GROUP by o.orderId
+        ORDER by createTime desc
+        ) couunts
+    </select>
+
+    <!--订单入库-->
+    <insert id="addOrder" parameterType="Order">
+        <selectKey resultType="String" order="AFTER" keyProperty="orderId">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO
+        tb_order (orderId,createTime,totalPrice,address_Id,userId,isPayfor)
+        VALUES
+        (#{orderId},#{createTime},#{totalPrice},#{address_Id},#{userId},0);
+    </insert>
+
+
+    <!--向 用户的商品表 添加商品-->
+    <insert id="addUserProduct" parameterType="list">
+        INSERT
+        INTO
+        tb_userproduct
+        (up_order_Id,up_userId,up_productId,up_name,up_price,up_size,up_num,up_totalprice,up_color,up_img)
+        VALUES
+        <foreach collection="list" item="p" index="index" separator=",">
+            (#{p.up_order_Id},#{p.up_userId},#{p.up_productId},#{p.up_name},#{p.up_price},#{p.up_size},#{p.up_num},#{p.up_totalprice},#{p.up_color},#{p.up_img})
+        </foreach>
+    </insert>
+
+    <!--删除订单-->
+    <!--<delete id="delOrderById" parameterType="String">-->
+        <!--DELETE from tb_order WHERE orderId IN-->
+        <!--<foreach item="orderId" index="i" collection="array" open="(" separator="," close=")">-->
+            <!--#{orderId}-->
+        <!--</foreach>-->
+    <!--</delete>-->
+    <!--<foreach collection="array" item="item" index="index"-->
+             <!--separator=" " open="(" close=")">-->
+        <!-- -1-->
+    <!--</foreach>-->
+    <update id="delOrderById" parameterType="String">
+        update tb_order
+        set  isdel= -1
+        where orderId in
+        <foreach collection="array" index="index" item="id"
+                 separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--删除用户商品表的商品-->
+    <!--<delete id="delUserProductById" parameterType="String">-->
+        <!--DELETE from tb_userproduct WHERE up_order_Id IN-->
+        <!--<foreach item="orderId" index="i" collection="array" open="(" separator="," close=")">-->
+            <!--#{orderId}-->
+        <!--</foreach>-->
+    <!--</delete>-->
+    <!--<foreach collection="array" item="item" index="index"-->
+             <!--separator=" " open="(" close=")">-->
+        <!-- -1-->
+    <!--</foreach>-->
+    <update id="delUserProductById" parameterType="String">
+        update tb_userproduct
+        set  isdel=-1
+
+        where up_order_Id in
+        <foreach collection="array" index="index" item="orderId"
+                 separator="," open="(" close=")">
+            #{orderId}
+        </foreach>
+    </update>
+
+    <!--下单前检查库存-->
+    <select id="checkStock" parameterType="String" resultType="Product">
+        select
+           num
+        from
+           tb_product
+         WHERE
+           productId=#{productId}
+        AND num>0;
+    </select>
+
+    <!--根据id 获取订单-->
+    <select id="findOrderById" parameterType="Order" resultMap="oneOrder">
+        SELECT
+        *
+        FROM
+        tb_order o,
+        tb_useraddress uad,
+        tb_userproduct up
+        WHERE
+        up.up_order_id=o.orderId
+        AND
+        o.userId=up.up_userId
+        AND
+        uad.addressId=o.address_Id
+        AND o.isdel=0
+        AND up.isdel=0
+        <if test="userId!=null and userId!=''">
+            AND o.userId =#{userId}
+        </if>
+        <if test="orderId!=null and orderId!=''">
+            AND o.orderId LIKE concat('%',#{orderId},'%')
+        </if>
+
+        <if test="startTime!=null">
+            and #{startTime} &lt;= o.createTime
+        </if>
+        <if test="endTime!=null">
+            and #{endTime} &gt;= o.createTime
+        </if>
+
+        <if test="isPayfor!=null and isPayfor !=''">
+            and o.isPayfor=#{isPayfor}
+        </if>
+    </select>
+    <resultMap id="oneOrder" type="Order">
+        <id property="orderId" column="orderId"/>
+        <result column="createTime" property="createTime"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="address_Id" property="address_Id"/>
+        <result column="isPayfor" property="isPayfor"/>
+        <result column="userId" property="userId"/>
+        <association property="address" javaType="Address">
+            <id column="addressId" property="addressId"/>
+            <result column="user_id" property="user_id"/>
+            <result column="address" property="address"/>
+            <result column="recUser" property="recUser"/>
+            <result column="recTel" property="recTel"/>
+        </association>
+        <collection property="userProducts" ofType="UserProduct">
+            <result column="up_productId" property="up_productId"/>
+            <result column="up_userId" property="up_userId"/>
+            <result column="up_price" property="up_price"/>
+            <result column="up_num" property="up_num"/>
+            <result column="up_img" property="up_img"/>
+            <result column="up_totalprice" property="up_totalprice"/>
+            <result column="up_color" property="up_color"/>
+            <result column="up_name" property="up_name"/>
+            <result column="up_size" property="up_size"/>
+        </collection>
+    </resultMap>
+
+
+
+
+    <!--物流-->
+    <select id="findOne" parameterType="String" resultMap="logistics">
+        SELECT	* FROM tb_order o,t_logistics l WHERE o.orderId = l.o_Id AND l.o_Id=#{id} and o.isdel=0 and l.isdel=0
+    </select>
+    <resultMap id="logistics" type="Logistics">
+        <id property="id" column="id"/>
+        <result column="o_Id" property="o_Id"/>
+        <result column="content" property="content"/>
+        <result column="cTime" property="cTime"/>
+        <result column="onsignor" property="onsignor"/>
+        <result column="onsignor_tel" property="onsignor_tel"/>
+        <result column="shipAddress" property="shipAddress"/>
+        <result column="consignee" property="consignee"/>
+        <result column="consignee_tel" property="consignee_tel"/>
+        <result column="recAddress" property="recAddress"/>
+        <result column="status" property="status"/>
+
+        <association property="order" javaType="Order">
+            <id property="orderId" column="orderId"/>
+            <result column="createTime" property="createTime"/>
+            <result column="totalPrice" property="totalPrice"/>
+            <result column="address_Id" property="address_Id"/>
+            <result column="isPayfor" property="isPayfor"/>
+            <result column="userId" property="userId"/>
+        </association>
+    </resultMap>
+    <insert id="addLogistics" parameterType="Logistics">
+        INSERT INTO
+        t_logistics (id,o_Id,content,onsignor,onsignor_tel,shipAddress,consignee,consignee_tel,recAddress,cTime)
+        VALUES
+        (#{id},#{o_Id},#{content},#{onsignor},#{onsignor_tel},#{shipAddress},#{consignee},#{consignee_tel},#{recAddress},#{cTime});
+    </insert>
+    <!--删除物流-->
+    <update id="updateLogistics" parameterType="java.util.List">
+        update t_logistics
+        set  isdel=
+        <foreach collection="list" item="item" index="index"
+                 separator=" " open="(" close=")">
+            -1
+        </foreach>
+        where id in
+        <foreach collection="list" index="index" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
+
+    <!--退款-->
+    <insert id="addReturnGoods" parameterType="ReturnGoods">
+        INSERT INTO
+        t_return (return_oId,reason,remark,returnTime,img1,img2,img3)
+        VALUES
+        (#{return_oId},#{reason},#{remark},#{returnTime},#{img1},#{img2},#{img3});
+    </insert>
+    <update id="delReturnGoods" parameterType="String">
+        update t_return
+        set  isdel=
+        <foreach collection="array" item="item" index="index"
+                 separator=" " open="(" close=")">
+            -1
+        </foreach>
+        where return_oId in
+        <foreach collection="array" index="index" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateReturnGoods" parameterType="ReturnGoods">
+        update t_return
+        <set>
+            <if test="reason!=null and reason!=''">
+                reason=#{reason},
+            </if>
+            <if test="remark!=null and remark!=''">
+                remark=#{remark},
+            </if>
+            <if test="returnTime!=null and returnTime!=''">
+                returnTime=#{returnTime},
+            </if>
+            <if test="img1!=null and img1!=''">
+                img1=#{img1},
+            </if>
+            <if test="img2!=null and img2!=''">
+                img2=#{img2},
+            </if>
+            <if test="img3!=null and img3!=''">
+                img3=#{img3},
+            </if>
+            <if test="returnContent!=null and returnContent!=''">
+                returnContent=#{returnContent},
+            </if>
+            <if test="return_status!=null">
+                return_status=#{return_status},
+            </if>
+        </set>
+        WHERE return_oId=#{return_oId}
+    </update>
+    <select id="findReturnGoods" parameterType="ReturnGoods" resultType="ReturnGoods">
+          SELECT * FROM t_return
+          <where>
+              <if test="return_oId !=null and return_oId!=''">
+                and return_oId =#{return_oId}
+              </if>
+              <if test="return_status !=null and return_status!=''">
+                  and return_status =#{return_status}
+              </if>
+          </where>
+    </select>
+
+
+    <select id="findReturnGoodsOne" parameterType="ReturnGoods" resultType="ReturnGoods">
+        SELECT	* FROM t_return WHERE return_oId=#{return_oId}
+    </select>
+
+    <select id="findReturnGoodsCount" parameterType="ReturnGoods" resultType="Integer">
+        SELECT	count(*) FROM t_return
+        <where>
+            <if test="return_oId !=null and return_oId!=''">
+                and return_oId =#{return_oId}
+            </if>
+            <if test="return_status !=null and return_status!=''">
+                and return_status =#{return_status}
+            </if>
+        </where>
+    </select>
+
+
+
+
+</mapper>

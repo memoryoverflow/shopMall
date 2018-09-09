@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.shopmall.mapper.UserMapper">
+
+    <!--查找-->
+    <select id="findUser" resultMap="userI">
+        SELECT
+        role.*,
+        u.*,
+        a.*,
+        urole.m_rId,urole.m_uId
+        FROM
+        USER u
+        LEFT JOIN tb_useraddress a ON a.user_id= u.uId
+        LEFT JOIN urole ON u.uId=urole.m_uId
+        LEFT JOIN role ON role.id=urole.m_rId
+        <where>
+            <if test="uId !=null and uId!=''">
+                and uId LIKE concat('%',#{uId},'%')
+            </if>
+            <if test="email !=null and email!=''">
+                and email LIKE concat('%',#{email},'%')
+            </if>
+            <if test="tel !=null and tel!=''">
+                and tel LIKE concat('%',#{tel},'%')
+            </if>
+            <if test="isActivated !=null and isActivated!=''">
+                and isActivated =#{isActivated}
+            </if>
+            <if test="isFrozen !=null and isFrozen!=''">
+                and isFrozen =#{isFrozen}
+            </if>
+            <if test="startTime!=null">
+                and #{startTime} &lt;= u.createTime
+            </if>
+            <if test="endTime!=null">
+                and #{endTime} &gt;= u.createTime
+            </if>
+        </where>
+    </select>
+    <resultMap id="userI" type="User">
+        <id column="uId" property="uId"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="email" property="email"/>
+        <result column="tel" property="tel"/>
+        <result column="createTime" property="createTime"/>
+        <result column="img" property="img"/>
+        <result column="isActivated" property="isActivated"/>
+        <result column="isFrozen" property="isFrozen"/>
+        <association property="role" javaType="Role">
+            <id column="id" property="id"/>
+            <result column="roleChar" property="roleChar"/>
+            <result column="roleName" property="roleName"/>
+            <result column="status" property="status"/>
+            <result column="creatTime" property="creatTime"/>
+            <result column="remark" property="remark"/>
+        </association>
+        <collection property="uAddressList" ofType="Address">
+            <id column="addressId" property="addressId"/>
+            <result column="user_id" property="user_id"/>
+            <result column="address" property="address"/>
+            <result column="recUser" property="recUser"/>
+            <result column="recTel" property="recTel"/>
+            <result column="isDefault" property="isDefault"/>
+        </collection>
+    </resultMap>
+    <select id="findUserCount" resultType="Integer">
+        select
+        count(*)
+        from
+        user
+        <where>
+        <if test="uId !=null and uId!=''">
+            and uId LIKE concat('%',#{uId},'%')
+        </if>
+        <if test="email !=null and email!=''">
+            and email LIKE concat('%',#{email},'%')
+        </if>
+        <if test="tel !=null and tel!=''">
+            and tel LIKE concat('%',#{tel},'%')
+        </if>
+        <if test="isActivated !=null and isActivated!=''">
+            and isActivated =#{isActivated}
+        </if>
+        <if test="isFrozen !=null and isFrozen!=''">
+            and isFrozen =#{isFrozen}
+        </if>
+        </where>
+    </select>
+
+    <!--id查找-->
+    <select id="findUserById" resultMap="finduserbyid" parameterType="String">
+        SELECT
+        role.*,
+        u.*,
+        urole.m_rId,urole.m_uId
+        FROM
+        USER u
+        LEFT JOIN urole ON u.uId=urole.m_uId
+        LEFT JOIN role ON role.id=urole.m_rId
+        WHERE
+           urole.m_uId=#{uId}
+    </select>
+    <resultMap id="finduserbyid" type="User">
+        <id column="uId" property="uId"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="email" property="email"/>
+        <result column="tel" property="tel"/>
+        <result column="createTime" property="createTime"/>
+        <result column="img" property="img"/>
+        <result column="isActivated" property="isActivated"/>
+        <result column="isFrozen" property="isFrozen"/>
+        <association property="role" javaType="Role">
+            <id column="id" property="id"/>
+            <result column="roleChar" property="roleChar"/>
+            <result column="roleName" property="roleName"/>
+            <result column="status" property="status"/>
+            <result column="creatTime" property="creatTime"/>
+            <result column="remark" property="remark"/>
+        </association>
+    </resultMap>
+
+
+    <!--获取用户地址-->
+    <select id="getAddress" parameterType="String" resultMap="UserMessage">
+         SELECT
+           *
+         FROM
+           user,
+           tb_userAddress ua
+         WHERE
+           ua.user_id=user.uId
+            and uId=#{uId}
+    </select>
+    <resultMap id="UserMessage" type="User">
+        <id property="uId" column="uId"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="tel" column="tel"/>
+        <result property="isActivated" column="isActivated"/>
+        <result property="isFrozen" column="isFrozen"/>
+        <collection property="uAddressList" ofType="Address">
+            <id property="addressId" column="addressId"/>
+            <result property="address" column="address"/>
+            <result property="recUser" column="recUser"/>
+            <result property="recTel" column="recTel"/>
+            <result property="isDefault" column="isDefault"/>
+        </collection>
+    </resultMap>
+
+
+    <!--登录-->
+    <select id="checkLogin" parameterType="User" resultType="User">
+        SELECT
+           *
+        FROM
+           USER
+        WHERE
+           email=#{email}
+    </select>
+    <select id="findUserLoginRole" parameterType="User" resultMap="LoginUser">
+        SELECT
+           *
+        FROM
+           USER u
+        LEFT JOIN urole ON u.uId=urole.m_uId
+        LEFT JOIN role ON role.id=urole.m_rId
+        WHERE
+           urole.m_uId=#{uId}
+    </select>
+    <resultMap id="LoginUser" type="User">
+        <id column="uId" property="uId"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="email" property="email"/>
+        <result column="tel" property="tel"/>
+        <result column="createTime" property="createTime"/>
+        <result column="img" property="img"/>
+        <result column="isActivated" property="isActivated"/>
+        <result column="isFrozen" property="isFrozen"/>
+        <association property="role" javaType="Role">
+            <id column="id" property="id"/>
+            <result column="roleChar" property="roleChar"/>
+            <result column="roleName" property="roleName"/>
+            <result column="status" property="status"/>
+            <result column="creatTime" property="creatTime"/>
+            <result column="remark" property="remark"/>
+        </association>
+    </resultMap>
+
+    <!--添加用户-->
+    <insert id="addUser" parameterType="User">
+        INSERT INTO
+          user
+        (uId,name,password,sex,email,tel,createTime,isActivated,isFrozen)
+         VALUES
+          (#{uId},#{name},#{password},#{sex},#{email},#{tel},#{createTime},#{isActivated},#{isFrozen})
+    </insert>
+
+    <!--添加用户角色-->
+    <insert id="addUserRole" parameterType="Urole">
+        INSERT INTO urole (m_uId,m_rId) VALUES (#{m_uId},#{m_rId})
+    </insert>
+    <!--删除用户角色-->
+    <insert id="delUserRole" parameterType="String">
+        DELETE FROM urole WHERE m_uId in
+        <foreach collection="array" item="id" index="idex" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </insert>
+    <!--更改用户角色-->
+    <insert id="updateUserRole" parameterType="Urole">
+        UPDATE urole set m_rId=#{m_rId} WHERE m_uId =#{m_uId}
+    </insert>
+
+    <!--修改-->
+    <update id="updateUser" parameterType="User">
+        UPDATE user
+        <set>
+            <if test="name!=null and name!=''">
+                name=#{name},
+            </if>
+            <if test="password!=null and password!=''">
+                password=#{password},
+            </if>
+            <if test="sex!=null and sex!=''">
+                sex=#{sex},
+            </if>
+            <if test="email!=null and email!=''">
+                email=#{email},
+            </if>
+            <if test="tel!=null and tel!=''">
+                tel=#{tel}
+            </if>
+            <if test="img!=null and img!=''">
+                img=#{img}
+            </if>
+            <if test="isActivated!=null and isActivated!='' or isActivated==-1">
+                isActivated=#{isActivated}
+            </if>
+            <if test="isFrozen!=null and isFrozen!='' or isFrozen==1">
+                isFrozen=#{isFrozen}
+            </if>
+        </set>
+        WHERE uId=#{uId}
+    </update>
+
+
+    <!--删除用户-->
+    <delete id="delUserById" parameterType="String">
+        DELETE from user WHERE uId in
+        <foreach collection="array" item="id" index="idex" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <!--删除用户地址-->
+    <delete id="delUserAddressById" parameterType="String">
+        DELETE from tb_useraddress WHERE addressId =#{addressId}
+    </delete>
+    <!--删除用户地址-->
+    <delete id="delUserAddressByUserId" parameterType="String">
+        DELETE from tb_useraddress WHERE user_id IN
+        <foreach collection="array" item="id" index="idex" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--用户名唯一性校验-->
+    <select id="checkNameIsOnly" parameterType="String" resultType="User">
+        select * from user where name=#{name}
+    </select>
+
+    <!--邮箱名字唯一性校验-->
+    <select id="checkEmailIsOnly" parameterType="String" resultType="User">
+        select * from user where email=#{email}
+    </select>
+
+
+    <!--手机号码名字唯一性校验-->
+    <select id="checkPhoneIsOnly" parameterType="String" resultType="User">
+        select * from user where tel=#{tel}
+    </select>
+
+    <!--添加地址-->
+    <insert id="addAddress" parameterType="Address">
+        INSERT INTO tb_useraddress (user_id,address,recUser,recTel,isDefault) VALUES (#{user_id},#{address},#{recUser},#{recTel},#{isDefault})
+    </insert>
+
+    <!--修改地址-->
+    <update id="updateAddress" parameterType="Address">
+        UPDATE
+        tb_useraddress
+        <set>
+            <if test="address !=null and address !=''">
+                address =#{address},
+            </if>
+            <if test="recUser !=null and recUser !=''">
+                recUser =#{recUser},
+            </if>
+            <if test="recTel !=null and recTel !=''">
+                recTel =#{recTel},
+            </if>
+            <if test="isDefault !=null and isDefault!='' or isDefault==0">
+                isDefault=#{isDefault}
+            </if>
+        </set>
+        WHERE addressId=#{addressId} and user_id=#{user_id}
+    </update>
+
+    <delete id="deleteAddressbyId" parameterType="String">
+        DELETE FROM tb_useraddress WHERE addressId=#{addressId}
+    </delete>
+
+
+    <!--激活邮箱-->
+    <update id="activedEmail" parameterType="String">
+        UPDATE
+          user set isActivated=1
+        WHERE uId=#{uId}
+    </update>
+
+
+
+    <!--在线用户数据插入-->
+    <insert id="addOnlineUser" parameterType="OnLineUser">
+        INSERT into online_user(id,name,ip,address,browser,system,time) VALUES (#{id},#{name},#{ip},#{address},#{browser},#{system},#{time})
+    </insert>
+    <delete id="delOnlineUser" parameterType="String">
+        DELETE FROM online_user WHERE id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="findOnlineUser" parameterType="OnLineUser" resultType="OnLineUser">
+        SELECT * FROM online_user
+        <where>
+            <if test="name !=null and name !=''">
+                and name=#{name}
+            </if>
+            <if test="address !=null and address !=''">
+                and address LIKE concat('%',#{address},'%')
+            </if>
+            <if test="startTime!=null">
+                and #{startTime} &lt;= time
+            </if>
+            <if test="endTime!=null">
+                and #{endTime} &gt;=time
+            </if>
+        </where>
+    </select>
+    <select id="findOnlineUserCount" parameterType="OnLineUser" resultType="Integer">
+        SELECT count(*) FROM online_user
+        <where>
+            <if test="name !=null and name !=''">
+                and name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="address !=null and address !=''">
+                and address LIKE concat('%',#{address},'%')
+            </if>
+            <if test="startTime!=null">
+                and #{startTime} &lt;= time
+            </if>
+            <if test="endTime!=null">
+                and #{endTime} &gt;=time
+            </if>
+        </where>
+    </select>
+
+
+    <!--用户登录记录-->
+    <insert id="addLoginlog" parameterType="LoginLog" >
+        INSERT into loginlog VALUES (#{id},#{name},#{ip},#{address},#{browser},#{system},#{status},#{msg},#{time})
+    </insert>
+    <delete id="delLoginlog" parameterType="String">
+        DELETE FROM loginlog WHERE id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <update id="updateLoginLog" parameterType="LoginLog">
+        UPDATE loginlog SET status=#{status},msg=#{msg} WHERE id=#{id}
+    </update>
+
+    <select id="findLoginlog" parameterType="LoginLog" resultType="LoginLog">
+        SELECT * FROM loginlog
+        <where>
+            <if test="name !=null and name !=''">
+                and name=#{name}
+            </if>
+            <if test="address !=null and address !=''">
+                and address LIKE concat('%',#{address},'%')
+            </if>
+            <if test="startTime!=null">
+                and #{startTime} &lt;= time
+            </if>
+            <if test="endTime!=null">
+                and #{endTime} &gt;=time
+            </if>
+            <if test="status !=null and status!=''">
+                status=#{status}
+            </if>
+        </where>
+    </select>
+    <select id="findLoginlogCount" parameterType="LoginLog" resultType="Integer">
+        SELECT count(*) FROM loginlog
+        <where>
+            <if test="name !=null and name !=''">
+                and name=#{name}
+            </if>
+            <if test="address !=null and address !=''">
+                and address LIKE concat('%',#{address},'%')
+            </if>
+            <if test="startTime!=null">
+                and #{startTime} &lt;= time
+            </if>
+            <if test="endTime!=null">
+                and #{endTime} &gt;=time
+            </if>
+            <if test="status !=null and status!=''">
+                status=#{status}
+            </if>
+        </where>
+    </select>
+
+</mapper>

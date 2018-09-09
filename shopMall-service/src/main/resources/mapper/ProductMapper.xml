@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.shopmall.mapper.ProductMapper">
+
+    <!--后台查询详情-->
+    <!--<select id="findProduct" parameterType="Product" resultMap="ProductAll">
+        SELECT
+        p.*,
+        c.color,
+        c.colorId,
+        s.size,
+        s.sizeId,
+        sm.imgsm,
+        sm.imgsm_id,
+        m.imglg,
+        m.imglg_id,
+        l.imgllg,
+        l.imgllg_id
+
+
+        FROM
+        tb_product p
+        LEFT JOIN tb_color c ON p.productId=c.product_Id
+        LEFT JOIN tb_size s ON p.productId=s.product_Id
+        INNER JOIN tb_img_sm sm ON p.productId =sm.product_Id
+        INNER JOIN tb_img_lg m ON p.productId =m.product_Id
+        INNER JOIN tb_img_llg l ON p.productId =l.product_Id
+        <where>
+            <if test="productId !=null and productId !=''">
+                and productId=#{productId}
+            </if>
+            <if test="name!=null and name !=''">
+                and name LIKE CONCAT('%',#{name},'%')
+            </if>
+            <if test="isdel!=null and isdel !=''or isdel=0">
+                and isdel=#{isdel}
+            </if>
+        </where>
+        GROUP BY
+        p.productId,
+        c.product_Id,
+        s.sizeId,
+        sm.imgsm_id,
+        m.imglg_id,
+        l.imgllg_id
+
+        ORDER BY
+        sm.imgsm ASC,
+        m.imglg ASC,
+        l.imgllg ASC
+    </select>
+    <resultMap id="ProductAll" type="Product">
+        <id property="productId" column="productId"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="num" column="num"/>
+        <result property="imgMain" column="imgMain"/>
+        <result property="describes" column="describes"/>
+        <result property="detail" column="detail"/>
+        <result property="isdel" column="isdel"/>
+
+        <collection property="imgSmList" ofType="ImgSm">
+            <id column="imgsm_id" property="imgsm_id"/>
+            <result column="imgsm" property="imgsm"/>
+        </collection>
+
+        <collection property="imgLgList" ofType="Imglg">
+            <id column="imglg_id" property="imglg_id"/>
+            <result column="imglg" property="imglg"/>
+        </collection>
+
+        <collection property="imgLLgList" ofType="ImgLLg">
+            <id column="imgllg_id" property="imgllg_id"/>
+            <result column="imgllg" property="imgllg"/>
+        </collection>
+
+        <collection property="productSizeList" ofType="ProductSize">
+            <id column="sizeId" property="sizeId"/>
+            <result column="size" property="size"/>
+        </collection>
+
+        <collection property="colorList" ofType="ProductColor">
+            <id column="colorId" property="colorId"/>
+            <result column="color" property="color"/>
+        </collection>
+    </resultMap>-->
+
+
+    <!--前台-->
+    <select id="findProductWeb" resultType="Product">
+        SELECT
+          *
+        FROM
+          tb_product
+          WHERE isdel =0
+    </select>
+    <select id="findProduct" parameterType="Product" resultType="Product">
+        SELECT
+        *
+        FROM
+        tb_product
+        <where>
+            <if test="productId !=null and productId !=''">
+                and productId LIKE CONCAT('%',#{productId},'%')
+            </if>
+            <if test="name!=null and name !=''">
+                and name LIKE CONCAT('%',#{name},'%')
+            </if>
+            <if test="isdel!=null and isdel !=''">
+                and isdel=#{isdel}
+            </if>
+        </where>
+    </select>
+    <select id="findProductCount" parameterType="Product" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        tb_product
+        <where>
+            <if test="productId !=null and productId !=''">
+                and productId LIKE CONCAT('%',#{productId},'%')
+            </if>
+            <if test="name!=null and name !=''">
+                and name LIKE CONCAT('%',#{name},'%')
+            </if>
+            <if test="isdel!=null and isdel !=''or isdel=0">
+                and isdel=#{isdel}
+            </if>
+        </where>
+    </select>
+    <!--商品详情-->
+    <select id="findProductById" parameterType="String" resultMap="ProductOne">
+        SELECT
+        p.*,
+        c.color,
+        c.colorId,
+        s.size,
+        s.sizeId,
+        l.imgllg_id,
+        l.imgllg
+        FROM
+        tb_product p
+        LEFT JOIN tb_color c ON p.productId=c.product_Id
+        LEFT JOIN tb_size s ON p.productId=s.product_Id
+        INNER JOIN tb_img_llg l ON p.productId =l.product_Id
+        WHERE
+          p.productId=#{producId}
+    </select>
+    <resultMap id="ProductOne" type="Product">
+        <id property="productId" column="productId"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="num" column="num"/>
+        <result property="imgMain" column="imgMain"/>
+        <result property="describes" column="describes"/>
+        <result property="detail" column="detail"/>
+        <result property="isdel" column="isdel"/>
+
+        <collection property="imgLLgList" ofType="ImgLLg">
+            <id column="imgllg_id" property="imgllg_id"/>
+            <result column="imgllg" property="imgllg"/>
+        </collection>
+
+        <collection property="productSizeList" ofType="ProductSize">
+            <id column="sizeId" property="sizeId"/>
+            <result column="size" property="size"/>
+        </collection>
+
+        <collection property="colorList" ofType="ProductColor">
+            <id column="colorId" property="colorId"/>
+            <result column="color" property="color"/>
+        </collection>
+    </resultMap>
+
+    <!--添加-->
+    <insert id="addProduct" parameterType="Product">
+        INSERT INTO tb_product (productId,name,price,num,describes,detail,imgMain) VALUES (#{productId},#{name},#{price},#{num},#{describes},#{detail},#{imgMain});
+    </insert>
+
+
+
+
+    <!--添加商品大图片-->
+    <insert id="addProductImg_llg" parameterType="List">
+        INSERT INTO
+        tb_img_llg (product_Id,imgllg)
+        VALUES
+        <foreach collection="list" item="imgsm" index="index" separator=",">
+            (#{imgsm.product_Id},#{imgsm.imgllg})
+        </foreach>
+    </insert>
+    <!--删除大图片-->
+    <delete id="delProductImg_llg" parameterType="String">
+        DELETE FROM tb_img_llg WHERE product_Id=#{product_Id};
+    </delete>
+    <update id="Img_llgDown" parameterType="ImgLLg">
+        UPDATE tb_img_llg SET imgllgIsdel=#{imgllgIsdel} WHERE product_Id=#{product_Id}
+    </update>
+    <update id="updateImg_llg" parameterType="ImgLLg">
+        UPDATE tb_img_llg SET imgllg=#{imgllg} WHERE imgllg_id=#{imgllg_id} and product_Id=#{product_Id}
+    </update>
+
+
+    <!--添加尺寸-->
+    <insert id="addProductSize" parameterType="List">
+        INSERT INTO
+        tb_size (product_Id,size)
+        VALUES
+        <foreach collection="list" item="s" index="index" separator=",">
+            (#{s.product_Id},#{s.size})
+        </foreach>
+    </insert>
+    <!--删除尺寸-->
+    <delete id="delProductSize" parameterType="String">
+        DELETE FROM tb_size WHERE product_Id=#{product_Id};
+    </delete>
+    <!--修改就是下架-->
+    <update id="updateProductSize" parameterType="ProductSize">
+        UPDATE tb_size SET sizeIsdel=#{sizeIsdel} WHERE product_Id=#{product_Id};
+    </update>
+
+
+    <!--添加颜色-->
+    <insert id="addProductColor" parameterType="List">
+        INSERT INTO
+        tb_color (product_Id,color)
+        VALUES
+        <foreach collection="list" item="c" index="index" separator=",">
+            (#{c.product_Id},#{c.color})
+        </foreach>
+    </insert>
+    <!--删除颜色-->
+    <delete id="delProductColor" parameterType="String">
+        DELETE FROM tb_color WHERE product_Id=#{product_Id};
+    </delete>
+    <!--修改就是下架-->
+    <update id="updateProductColor" parameterType="ProductColor">
+        UPDATE tb_color SET colorIsdel=#{colorIsdel} WHERE product_Id=#{product_Id};
+    </update>
+
+
+    <!--删除商品让其下架-->
+    <update id="delProductById">
+        UPDATE
+        tb_product
+        SET isdel=#{isdel}
+        WHERE
+        productId in
+        <foreach item="ids" index="i" collection="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </update>
+    <!--修改信息商品-->
+    <update id="updateProduct" parameterType="Product">
+        update
+        tb_product
+        <set>
+            <if test="name!=null and name !=''">
+                name=#{name},
+            </if>
+            <if test="price!=null and price !=''">
+                price=#{price},
+            </if>
+            <if test="num!=null and price !=''">
+                num=#{num},
+            </if>
+            <if test="describes!=null and describes !=''">
+                describes=#{describes},
+            </if>
+            <if test="imgMain!=null and imgMain !=''">
+                imgMain=#{imgMain},
+            </if>
+            <if test="detail!=null and detail !=''">
+                detail=#{detail}
+            </if>
+        </set>
+        WHERE
+        productId =#{productId}
+    </update>
+    <!--根据 产品id 查询用户的产品-->
+</mapper>

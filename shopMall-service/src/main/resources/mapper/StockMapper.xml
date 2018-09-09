@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.shopmall.mapper.StockMapper">
+
+
+    <!--更新库存-->
+    <update id="updateStock" parameterType="Product">
+        UPDATE
+          tb_product
+        SET
+           num= num - #{num}
+         WHERE
+           productId=#{productId}
+        AND num>0;
+    </update>
+
+    <!--向 商品订单 中间表添加数据-->
+    <insert id="addOrderAndProduct" parameterType="list">
+         INSERT INTO tb_orderandproduct (orderID,productID) VALUES
+         <foreach collection="list" index="index" item="OP" separator=",">
+             (#{OP.orderID},#{OP.productID})
+         </foreach>
+    </insert>
+
+    <!--向 用户的商品表 添加商品-->
+    <insert id="addUserProduct" parameterType="list">
+        INSERT
+        INTO
+          tb_userproduct
+         (up_order_Id,up_userId,up_productId,up_name,up_price,up_size,up_num,up_totalprice,up_color,up_img)
+        VALUES
+        <foreach collection="list" item="p" index="index" separator=",">
+          (#{p.up_order_Id},#{p.up_userId},#{p.up_productId},#{p.up_name},#{p.up_price},#{p.up_size},#{p.up_num},#{p.up_totalprice},#{p.up_color},#{p.up_img})
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yj.shopmall.mapper.SeckillMapper">
+    <!--商品详情-->
+    <select id="findSeckillProduct" resultMap="ProductMore">
+        SELECT
+        p.*,
+        tb_color.color,
+        tb_size.size,
+        tb_img_llg.imgllg,
+        seckill.*
+        FROM
+        tb_product p,
+        tb_color,
+        tb_size,
+        tb_img_llg,
+        seckill
+        WHERE
+        seckill.kill_productId= p.productId
+        AND
+        p.productId=tb_img_llg.product_Id
+        AND
+        tb_color.product_Id=p.productId
+        AND
+        tb_size.product_Id=p.productId
+        AND
+        seckill.isStart=0
+        ORDER BY
+        tb_img_llg.imgllg asc
+    </select>
+    <resultMap id="ProductMore" type="Seckill">
+        <id property="kill_productId" column="kill_productId"/>
+        <result property="kill_startTime" column="kill_startTime"/>
+        <result property="kill_endTime" column="kill_endTime"/>
+
+        <collection property="productList" ofType="Product">
+            <id property="productId" column="productId"/>
+            <result property="name" column="name"/>
+            <result property="price" column="price"/>
+            <result property="num" column="num"/>
+            <result property="imgMain" column="imgMain"/>
+            <result property="describe" column="describe"/>
+
+            <collection property="imgLLgList" ofType="ImgLLg">
+                <result column="imgllg" property="imgllg"/>
+            </collection>
+
+            <collection property="productSizeList" ofType="ProductSize">
+                <result column="size" property="size"/>
+            </collection>
+
+            <collection property="colorList" ofType="ProductColor">
+                <result column="color" property="color"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+
+    <!--商品详情-->
+    <select id="findProductById" parameterType="String" resultMap="ProductOne">
+        SELECT
+        p.*,
+        tb_color.color,
+        tb_size.size,
+        tb_img_llg.imgllg,
+        seckill.*
+        FROM
+        tb_product p,
+        tb_color,
+        tb_size,
+        tb_img_llg,
+        seckill
+        WHERE
+        seckill.kill_productId= p.productId
+        AND
+        p.productId=tb_img_llg.product_Id
+        AND
+        tb_color.product_Id=p.productId
+        AND
+        tb_size.product_Id=p.productId
+        AND
+        p.productId=#{productId}
+        AND
+        seckill.isStart=0
+        ORDER BY
+        tb_img_llg.imgllg asc
+
+    </select>
+    <resultMap id="ProductOne" type="Seckill">
+        <id property="kill_productId" column="kill_productId"/>
+        <result property="kill_startTime" column="kill_startTime"/>
+        <result property="kill_endTime" column="kill_endTime"/>
+
+        <association property="product" javaType="Product">
+            <id property="productId" column="productId"/>
+            <result property="name" column="name"/>
+            <result property="price" column="price"/>
+            <result property="num" column="num"/>
+            <result property="imgMain" column="imgMain"/>
+            <result property="describe" column="describe"/>
+
+            <collection property="imgLLgList" ofType="ImgLLg">
+                <result column="imgllg" property="imgllg"/>
+            </collection>
+
+            <collection property="productSizeList" ofType="ProductSize">
+                <result column="size" property="size"/>
+            </collection>
+
+            <collection property="colorList" ofType="ProductColor">
+                <result column="color" property="color"/>
+            </collection>
+        </association>
+    </resultMap>
+
+
+    <!--存储过程-->
+    <select id="killByProcedure" statementType="CALLABLE">
+          call execute_seckill(
+             #{up_name,mode=IN},
+             #{up_price,mode=IN},
+             #{up_color,mode=IN},
+             #{up_img,mode=IN},
+             #{up_totalprice,mode=IN},
+             #{up_size,mode=IN},
+             #{up_num,mode=IN},
+             #{up_orderId,mode=IN},
+             #{createTime,mode=IN},
+
+             #{totalPrice,mode=IN},
+             #{address_Id,mode=IN},
+             #{up_userId,mode=IN},
+             #{up_productId,mode=IN},
+             #{kill_Time,mode=IN},
+             #{result,jdbcType=INTEGER,mode=OUT}
+          )
+    </select>
+
+    <!--看库存-->
+    <select id="selectNumById" parameterType="String" resultType="Product">
+        SELECT num from tb_product WHERE productId=#{productId}
+    </select>
+
+    <!--获取用户账单-->
+    <select id="selectOrderByIdAndUID" parameterType="Order" resultType="Order">
+        SELECT orderId,userId from tb_order WHERE orderId=#{orderId} AND userId=#{userId}
+    </select>
+
+
+    <!--秒杀活动描述相关信息-->
+    <select id="findExplain" parameterType="String" resultType="SeckillExplain">
+        select * FROM tb_seckillexplain
+    </select>
+    <insert id="addExplain" parameterType="SeckillExplain">
+        INSERT INTO tb_seckillexplain VALUES (#{id},#{name},#{explain1},#{explain2},#{explain3},#{img1},#{img2},#{img3})
+    </insert>
+    <update id="updateExplain" parameterType="SeckillExplain">
+        UPDATE tb_seckillexplain
+        <set>
+            <if test="id !=null and id !=''">
+                id=#{id},
+            </if>
+            <if test="name !=null and name !=''">
+                name=#{name},
+            </if>
+            <if test="explain1 !=null and explain1 !=''">
+                explain1=#{explain1},
+            </if>
+            <if test="explain2 !=null and explain2 !=''">
+                explain2=#{explain2},
+            </if>
+            <if test="explain3 !=null and explain3 !=''">
+                explain3=#{explain3},
+            </if>
+            <if test="img1 !=null and img1 !=''">
+                img1=#{img1},
+            </if>
+            <if test="img2 !=null and img2 !=''">
+                img2=#{img2},
+            </if>
+            <if test="img3 !=null and img3 !=''">
+                img3=#{img3}
+            </if>
+        </set>
+        WHERE p_id=1
+    </update>
+
+    <!--添加秒杀的时间-->
+    <insert id="addSeckill" parameterType="Seckill">
+        INSERT INTO
+         seckill
+          (kill_productId,kill_startTime,kill_endTime)
+          VALUES
+           (#{kill_productId},#{kill_startTime},#{kill_endTime})
+    </insert>
+    <update id="updateSeckill" parameterType="Seckill">
+        UPDATE
+          seckill
+          <set>
+              <if test="kill_productId !=null and kill_productId !=''">
+                  kill_productId=#{kill_productId},
+              </if>
+              <if test="kill_startTime!=null">
+                  kill_startTime=#{kill_startTime},
+              </if>
+              <if test="kill_endTime !=null">
+                  kill_endTime=#{kill_endTime},
+              </if>
+          </set>
+        WHERE
+            id=1
+    </update>
+
+</mapper>
